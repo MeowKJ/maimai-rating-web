@@ -1,0 +1,19 @@
+.basic-background {
+    background-color: green;
+}
+
+.advance-background {
+    background-color: yellow;
+}
+
+.expert-background {
+    background-color: red;
+}
+
+.master-background {
+    background-color: purple;
+}
+
+.remaster-background {
+    background-color: #dcbcfb; /* Use a suitable color code for light purple */
+}
