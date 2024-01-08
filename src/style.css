@@ -94,14 +94,14 @@ button:focus-visible {
     padding: 0 !important;
 }
 
-
-body {
-    /* ... your existing styles ... */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
     background-image: url('https://i.imgs.ovh/2024/01/08/IHIHC.png');
-    background-size: cover; /* Ensures that the background image covers the entire container */
-    background-attachment: fixed; /* Keeps the background fixed while scrolling */
+    background-size: cover;
+    background-attachment: fixed;
     color: #1a1a1a;
 }
-
 
 

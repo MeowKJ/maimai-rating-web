@@ -20,10 +20,10 @@
           </el-input>
         </el-col>
         <el-col class="nickname" :span="6" :xs="8">
-          <span>昵称：{{ nickname }}</span>
+          <span>昵称：{{ user.nickname }}</span>
         </el-col>
         <el-col class="rating" :span="6" :xs="16">
-          DXRating:{{ rating }}
+          DXRating:{{ user.rating }}
         </el-col>
       </el-row>
     </el-header>
@@ -49,62 +49,26 @@
         </div>
         <div v-else-if="isSuccess">
           <!-- 显示其他获取的数据 -->
-          <el-row v-for="(songs, i) in totalSongs" class="card-row" :gutter="20">
+          <el-row v-for="(songs, i) in totalSongsComputed" class="card-row" :gutter="20" justify="space-evenly">
+            <!-- 在每个songs数组前添加一个标题 -->
+            <el-row class="category-title-row">
+              <el-col :span="24">
+                <div class="category-title">
+                  <span class='bx-title'>{{ i === 0 ? 'B15   ' : 'B35   ' }}</span>
+                  <span class='bx-score'>{{ i === 0 ? userStats.b15sum : userStats.b35sum }}</span>
+                </div>
+              </el-col>
+            </el-row>
             <el-col
                 class="card-col"
                 v-for="(song, index) in songs"
                 :span="12"
                 :sm="12"
                 :md="8"
-                :xl="8"
+                :xl="5"
                 :key="(i+1)*index"
             >
-              <el-card body-class="song-card" shadow="hover">
-                <el-row>
-                  <!-- 左边放图片 -->
-                  <el-col :span="24" :sm="8" :lg="7" :xl="6">
-                    <img :src="generateImageUrl(song['song_id'])" alt="Card Image" class="full-width-image">
-                  </el-col>
-
-                  <!-- 右边放标题和其他数据 -->
-                  <el-col :span="24" :sm="16" :lg="17" :xl="18">
-                    <el-row class="card-content">
-                      <el-col>
-                        <el-row class="song-header" :class="getBackgroundColorClass(song['level_index'])">
-                          <el-col :span="4">{{ song['ra'] }}</el-col>
-                          <el-col :span="16">{{ song['level_label'] }} ({{ song['ds'] }})</el-col>
-                          <el-col :span="4" class="song-header-item">#{{ index + 1 }}</el-col>
-                        </el-row>
-                      </el-col>
-                      <el-col class="song-title">{{ song.title }}</el-col>
-                      <el-col>
-                        <el-row class="rate-content">
-                          <el-col :span="24" :sm="12" class="rate-item achievements-text">
-                            {{ Number(song['achievements']).toFixed(4) }}
-                          </el-col>
-                          <el-col :span="14" :sm="6" class="rate-item">
-                            <img :src="generateRateUrl(song['rate'])" alt="" class="rate-image">
-                          </el-col>
-                          <el-col :span="5" :sm="3" class="rate-item">
-                            <img :src="generateBadgeUrl(song['fc'])" alt="" class="rate-image">
-                          </el-col>
-                          <el-col :span="5" :sm="3" class="rate-item">
-                            <img :src="generateBadgeUrl(song['fs'])" alt="" class="rate-image">
-                          </el-col>
-                        </el-row>
-                      </el-col>
-                      <el-col>
-                        <el-row class="song-footer">
-                          <el-col :span="4" class="song-footer-item">{{ song['type'] }}</el-col>
-                          <el-col :span="12" class="song-footer-item">{{ song['dxScore'] }}</el-col>
-                          <el-col :span="8" class="song-footer-item">id:{{ song['song_id'] }}</el-col>
-                        </el-row>
-                      </el-col>
-                    </el-row>
-
-                  </el-col>
-                </el-row>
-              </el-card>
+              <song-card :song="song" :index="index"></song-card>
             </el-col>
             <el-divider border-style="dashed"/>
           </el-row>
@@ -123,10 +87,20 @@
         </div>
       </el-watermark>
     </el-main>
+    <el-footer>
+      <el-row :gutter="20" class="stats-row">
+        <el-col :span="6" v-for="(value, key) in userStats" :key="key">
+          <el-card class="stat-card">
+            <div class="stat-title">{{ formatStatTitle(key) }}</div>
+            <div class="stat-value">{{ value }}</div>
+          </el-card>
+        </el-col>
+      </el-row>
+    </el-footer>
   </el-container>
 </template>
 <script setup>
-import {ref, onMounted, watch} from 'vue';
+import {ref, onMounted, watch, computed} from 'vue';
 import {useRoute} from 'vue-router'; // 引入 useRoute
 
 import getData from './utils/api.js';
@@ -134,13 +108,31 @@ import {Search} from '@element-plus/icons-vue';
 
 import 'element-plus/theme-chalk/display.css'
 
+import SongCard from './components/SongCard.vue';
+
+
+import {useRouter} from 'vue-router';
+
+const router = useRouter();
 
 const route = useRoute(); // 使用 useRoute
 const isLoading = ref(true);
 const username = ref('');
-const nickname = ref('');
-const rating = ref(0);
+const user = ref({
+  nickname: '',
+  rating: 0,
+  b15max: 0,
+  b15min: 0,
+  b15avg: 0,
+  b15sum: 0,
+  b35max: 0,
+  b35min: 0,
+  b35avg: 0,
+  b35sum: 0,
+});
+
 const totalSongs = ref([]);
+
 const isFetchData = ref(false);
 const isSuccess = ref(false);
 const errorMessage = ref('');
@@ -149,6 +141,28 @@ const tempArr = ref([]);
 const font = ref({
   color: 'rgba(255, 255, 255, .15)',
 });
+
+const totalSongsComputed = computed(() => {
+  // 处理 totalSongs 的逻辑
+  return totalSongs.value.map(song => {
+    // 一些逻辑
+    return song;
+  });
+});
+
+const userStats = computed(() => {
+  return {
+    b15max: user.value.b15max || 0,
+    b15min: user.value.b15min || 0,
+    b15avg: user.value.b15avg !== undefined ? user.value.b15avg.toFixed(2) : '0.00',
+    b15sum: user.value.b15sum || 0,
+    b35max: user.value.b35max || 0,
+    b35min: user.value.b35min || 0,
+    b35avg: user.value.b35avg !== undefined ? user.value.b35avg.toFixed(2) : '0.00',
+    b35sum: user.value.b35sum || 0,
+  };
+});
+
 
 watch(() => route.params.username, (newUsername) => {
   if (newUsername) {
@@ -165,7 +179,8 @@ onMounted(() => {
 });
 
 function goTo() {
-  window.location.href = `/${username.value}`;
+  // 使用 router.push 进行路由跳转
+  router.push({path: `/${username.value}`});
 }
 
 async function fetchData() {
@@ -174,15 +189,30 @@ async function fetchData() {
       return;
     }
     totalSongs.value = [];
-    nickname.value = '';
-    rating.value = 0;
+    user.value = {
+      nickname: username.value,
+    };
+
     isLoading.value = true;
     const data = await getData(username.value);
     console.log('获取到的数据：', data);
-    nickname.value = data['nickname'];
-    rating.value = data['rating'];
-    totalSongs.value.push(data['charts']['dx']);
-    totalSongs.value.push(data['charts']['sd']);
+
+    const dxData = data['charts']['dx'] || []; // 防止未定义的数据
+    const sdData = data['charts']['sd'] || []; // 防止未定义的数据
+
+    totalSongs.value.push(dxData);
+    totalSongs.value.push(sdData);
+
+    const b15stats = calculateStats(dxData, 'b15');
+    const b35stats = calculateStats(sdData, 'b35');
+    console.log('b15stats:', b15stats);
+    // 更新 user 对象
+    user.value = {
+      nickname: data['nickname'],
+      rating: data['rating'],
+      ...b15stats,
+      ...b35stats
+    };
     isSuccess.value = true;
   } catch (error) {
     isSuccess.value = false;
@@ -192,84 +222,39 @@ async function fetchData() {
   isLoading.value = false;
 }
 
+// 计算统计数据的函数
+function calculateStats(data, prefix) {
+  const max = data.length > 0 ? data[0].ra : 0;
+  const min = data.length > 0 ? data[data.length - 1].ra : 0;
+  const sum = data.reduce((acc, song) => acc + song.ra, 0);
+  const avg = data.length > 0 ? sum / data.length : 0;
 
-function generateImageUrl(songId) {
-  return `https://lxns.org/maimai/jacket/${songId % 10000}.png`;
+  return {
+    [`${prefix}max`]: max,
+    [`${prefix}min`]: min,
+    [`${prefix}avg`]: avg,
+    [`${prefix}sum`]: sum
+  };
 }
 
-function generateRateUrl(rate) {
-  return `https://maimai.lxns.net/assets/maimai/music_rank/${rate}.webp`;
-}
-
-function generateBadgeUrl(badge) {
-  if (!badge) {
-    badge = 'blank';
-  }
-  return `https://maimai.lxns.net/assets/maimai/music_icon/${badge}.webp`;
-}
-
-function getBackgroundColorClass(levelIndex) {
-  switch (levelIndex) {
-    case 0:
-      return 'basic-background';
-    case 1:
-      return 'advance-background';
-    case 2:
-      return 'expert-background';
-    case 3:
-      return 'master-background';
-    case 4:
-      return 'remaster-background';
-    default:
-      return '';
-  }
+function formatStatTitle(key) {
+  // 格式化统计数据的标题
+  const titles = {
+    b15max: 'B15 最高分',
+    b15min: 'B15 最低分',
+    b15avg: 'B15 平均分',
+    b15sum: 'B15 总分',
+    b35max: 'B35 最高分',
+    b35min: 'B35 最低分',
+    b35avg: 'B35 平均分',
+    b35sum: 'B35 总分',
+  };
+  return titles[key] || key;
 }
 </script>
 
 <style scoped>
 @import url('./css/color.css');
-
-
-.full-width-image {
-  width: 100%;
-  display: block;
-}
-
-
-.achievements-text {
-  text-align: left;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.song-header {
-  font-size: 0.8em;
-  color: #f9f9f9;
-  border-radius: 2px;
-  font-weight: bold;
-  display: flex;
-}
-
-.song-footer {
-  border-top: #1a1a1a solid 1px;
-  margin-left: 5px;
-  margin-right: 5px;
-  padding-left: 5px;
-  padding-right: 5px;
-  font-weight: bold;
-  text-align: left;
-  font-size: 10px;
-  color: #242424;
-  margin-top: 10px;
-}
-
-
-.rate-image {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: cover; /* 图片完全填充父容器，可能会裁剪部分内容 */
-  display: block;
-}
 
 .title {
   text-align: left;
@@ -281,36 +266,12 @@ function getBackgroundColorClass(levelIndex) {
 }
 
 @media (max-width: 768px) {
-  .rate-image {
-    height: 35px;
-  }
 
   .title {
     text-align: center;
   }
 }
 
-.rate-content {
-  align-items: center;
-  justify-content: center;
-}
-
-.song-title {
-  text-align: left;
-  font-size: 1.0em;
-  font-weight: bold;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-
-}
-
-.card-content {
-  height: 100%;
-  width: 100%;
-  padding-left: 1px;
-  padding-right: 1px;
-}
 
 .nickname {
   text-align: center;
@@ -353,5 +314,53 @@ function getBackgroundColorClass(levelIndex) {
   transform: scale(1.05); /* Scale the card on hover */
 }
 
+.stats-row {
+  text-align: center;
+}
+
+.stat-card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  border-radius: 10px;
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 5px;
+
+}
+
+.stat-card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+}
+
+.stat-title {
+  font-size: 1em;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.stat-value {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #000;
+}
+
+.category-title-row {
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  display: flex;
+  align-items: center; /* 垂直居中对齐 */
+}
+
+.bx-title {
+  font-size: 1.6em;
+  font-weight: bold;
+}
+
+.bx-score {
+  font-size: 1.3em;
+}
 </style>
 
