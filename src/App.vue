@@ -79,16 +79,16 @@
                       <el-col class="song-title">{{ song.title }}</el-col>
                       <el-col>
                         <el-row class="rate-content">
-                          <el-col :span="12" class="rate-item achievements-text">
+                          <el-col :span="24" :sm="12" class="rate-item achievements-text">
                             {{ Number(song['achievements']).toFixed(4) }}
                           </el-col>
-                          <el-col :span="6" class="rate-item">
+                          <el-col :span="14" :sm="6" class="rate-item">
                             <img :src="generateRateUrl(song['rate'])" alt="" class="rate-image">
                           </el-col>
-                          <el-col :span="3" class="rate-item">
+                          <el-col :span="5" :sm="3" class="rate-item">
                             <img :src="generateBadgeUrl(song['fc'])" alt="" class="rate-image">
                           </el-col>
-                          <el-col :span="3" class="rate-item">
+                          <el-col :span="5" :sm="3" class="rate-item">
                             <img :src="generateBadgeUrl(song['fs'])" alt="" class="rate-image">
                           </el-col>
                         </el-row>
@@ -267,9 +267,13 @@ function getBackgroundColorClass(levelIndex) {
   display: block;
 }
 
+@media (max-width: 768px) {
+  .rate-image {
+    height: 35px;
+  }
+}
+
 .rate-content {
-  height: 30px;
-  display: flex;
   align-items: center;
   justify-content: center;
 }
