@@ -2,10 +2,10 @@
   <el-container class="container">
     <el-header class="user-header">
       <el-row>
-        <el-col class="title" :span=6 :xs="10">
+        <el-col class="title" :span=6 :xs="24">
           Maimai的频道网页查分器
         </el-col>
-        <el-col :span="6" :xs="14" class="header-right">
+        <el-col :span="6" :xs="14" class="header-right hidden-md-and-down">
           <el-input
               v-model="username"
               placeholder="请输入水鱼用户名"
@@ -62,12 +62,12 @@
               <el-card body-class="song-card" shadow="hover">
                 <el-row>
                   <!-- 左边放图片 -->
-                  <el-col :span="24" :sm="8" :lg="6" :xl="6">
+                  <el-col :span="24" :sm="8" :lg="7" :xl="6">
                     <img :src="generateImageUrl(song['song_id'])" alt="Card Image" class="full-width-image">
                   </el-col>
 
                   <!-- 右边放标题和其他数据 -->
-                  <el-col :span="24" :sm="16" :lg="18" :xl="18">
+                  <el-col :span="24" :sm="16" :lg="17" :xl="18">
                     <el-row class="card-content">
                       <el-col>
                         <el-row class="song-header" :class="getBackgroundColorClass(song['level_index'])">
@@ -128,8 +128,12 @@
 <script setup>
 import {ref, onMounted, watch} from 'vue';
 import {useRoute} from 'vue-router'; // 引入 useRoute
+
 import getData from './utils/api.js';
 import {Search} from '@element-plus/icons-vue';
+
+import 'element-plus/theme-chalk/display.css'
+
 
 const route = useRoute(); // 使用 useRoute
 const isLoading = ref(true);
@@ -267,9 +271,22 @@ function getBackgroundColorClass(levelIndex) {
   display: block;
 }
 
+.title {
+  text-align: left;
+  font-size: 1.3em;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 @media (max-width: 768px) {
   .rate-image {
     height: 35px;
+  }
+
+  .title {
+    text-align: center;
   }
 }
 
@@ -318,14 +335,6 @@ function getBackgroundColorClass(levelIndex) {
   justify-content: center;
 }
 
-.title {
-  text-align: left;
-  font-size: 1.3em;
-  font-weight: bold;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 
 .container {
   margin: 0;
