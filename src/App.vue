@@ -1,18 +1,54 @@
 <template>
-  <div class="common-layout">
-    <el-container>
-      <el-header>
-        <p>
+  <el-container class="container">
+    <el-header class="user-header">
+      <el-row>
+        <el-col class="title" :span=6 :xs="10">
+          Maimai的频道网页查分器
+        </el-col>
+        <el-col :span="6" :xs="14" class="header-right">
+          <el-input
+              v-model="username"
+              placeholder="请输入水鱼用户名"
+              class="input-with-select"
+          >
+            <template #prepend>
+              用户名：
+            </template>
+            <template #append>
+              <el-button :icon="Search" @click="goTo()" :disabled="isFetchData" circle/>
+            </template>
+          </el-input>
+        </el-col>
+        <el-col class="nickname" :span="6" :xs="8">
           <span>昵称：{{ nickname }}</span>
-          {{ rating }}
-        </p>
-      </el-header>
-      <el-main>
+        </el-col>
+        <el-col class="rating" :span="6" :xs="16">
+          DXRating:{{ rating }}
+        </el-col>
+      </el-row>
+    </el-header>
+
+    <el-main>
+      <el-watermark :font="font" :content="['MaiMai的频道']">
         <!-- 显示异步获取的数据 -->
-        <div v-if="isLoading">加载中...</div>
-        <div v-else>
+        <div v-if="isLoading">
+
+          <el-row :gutter="40">
+            <el-col
+                class="card-col"
+                v-for="i in tempArr"
+                :span="12"
+                :sm="12"
+                :md="8"
+                :xl="8"
+                :key="(i)"
+            >
+              <el-skeleton :rows="4" animated/>
+            </el-col>
+          </el-row>
+        </div>
+        <div v-else-if="isSuccess">
           <!-- 显示其他获取的数据 -->
-          <!-- B15 -->
           <el-row v-for="(songs, i) in totalSongs" class="card-row" :gutter="20">
             <el-col
                 class="card-col"
@@ -21,9 +57,9 @@
                 :sm="12"
                 :md="8"
                 :xl="8"
-                :key="(index)"
+                :key="(i+1)*index"
             >
-              <el-card class="song-card" :body-style="{ padding: '0px' }">
+              <el-card body-class="song-card" shadow="hover">
                 <el-row>
                   <!-- 左边放图片 -->
                   <el-col :span="24" :sm="8" :lg="6" :xl="6">
@@ -70,96 +106,124 @@
                 </el-row>
               </el-card>
             </el-col>
+            <el-divider border-style="dashed"/>
           </el-row>
         </div>
-      </el-main>
-    </el-container>
-  </div>
+        <div v-else>
+          <el-result
+              icon="error"
+              title="出错了"
+              :sub-title=errorMessage
+              style=""
+          >
+            <template #extra>
+              <el-button type="primary">Back</el-button>
+            </template>
+          </el-result>
+        </div>
+      </el-watermark>
+    </el-main>
+  </el-container>
 </template>
 
 <!-- 其他部分保持不变 -->
 
+<script setup>
+import {ref, onMounted} from 'vue';
+import getData from './utils/api.js';
+import {Search} from '@element-plus/icons-vue';
 
-<script>
-import fetchData from './utils/api.js'; // 替换为实际的文件路径
+const isLoading = ref(true);
+const username = ref('');
+const nickname = ref('');
+const rating = ref(0);
+const totalSongs = ref([]);
+const isFetchData = ref(false);
+const isSuccess = ref(false);
+const errorMessage = ref('');
+const tempArr = ref([]);
 
-export default {
-  data() {
-    return {
-      isLoading: true,
-      nickname: '',
-      rating: 0,
-      totalSongs: [],
-    };
-  },
-  computed: {},
-  mounted() {
-    this.fetchData();
-  },
-  methods: {
-    async fetchData() {
-      try {
-        const username = this.getUsernameFromURL();
-        const data = await fetchData(username);
-        console.log('获取到的数据：', data);
-        this.nickname = data['nickname'];
-        this.rating = data['rating'];
-        this.totalSongs.push(data['charts']['dx']);
-        this.totalSongs.push(data['charts']['sd']);
-        this.isLoading = false;
-      } catch (error) {
-        console.error('出错：', error);
-        this.isLoading = false;
-      }
-    },
-    getUsernameFromURL() {
-      const pathSegments = window.location.pathname.split('/');
-      // 根据实际情况确定要获取的位置
-      return pathSegments[pathSegments.length - 1];
-    },
-    generateImageUrl(songId) {
-      return `https://lxns.org/maimai/jacket/${songId % 10000}.png`;
-    },
-    generateRateUrl(rate) {
-      return `https://maimai.lxns.net/assets/maimai/music_rank/${rate}.webp`;
-    },
-    generateBadgeUrl(badge) {
-      if (!badge) {
-        badge = 'blank';
-      }
-      return `https://maimai.lxns.net/assets/maimai/music_icon/${badge}.webp`;
-    },
-    getBackgroundColorClass(levelIndex) {
-      switch (levelIndex) {
-        case 0:
-          return 'basic-background';
-        case 1:
-          return 'advance-background';
-        case 2:
-          return 'expert-background';
-        case 3:
-          return 'master-background';
-        case 4:
-          return 'remaster-background';
-        default:
-          return '';
-      }
-    },
+const font = ref({
+  color: 'rgba(255, 255, 255, .15)',
+});
 
-  },
-};
+onMounted(() => {
+  for (let i = 0; i < 50; i++) {
+    tempArr.value.push(i);
+  }
+  username.value = getUsernameFromURL();
+  fetchData();
+});
+
+function goTo() {
+  window.location.href = `/${username.value}`;
+}
+
+async function fetchData() {
+  try {
+    if (!username.value) {
+      return;
+    }
+    totalSongs.value = [];
+    nickname.value = '';
+    rating.value = 0;
+    isLoading.value = true;
+    const data = await getData(username.value);
+    console.log('获取到的数据：', data);
+    nickname.value = data['nickname'];
+    rating.value = data['rating'];
+    totalSongs.value.push(data['charts']['dx']);
+    totalSongs.value.push(data['charts']['sd']);
+    isSuccess.value = true;
+  } catch (error) {
+    isSuccess.value = false;
+    errorMessage.value = '无法获取你的分数，请检查用户名是否正确，同时确保没有设置隐私保护';
+    console.error('出错：', error);
+  }
+  isLoading.value = false;
+}
+
+function getUsernameFromURL() {
+  const pathSegments = window.location.pathname.split('/');
+  return pathSegments[pathSegments.length - 1];
+}
+
+function generateImageUrl(songId) {
+  return `https://lxns.org/maimai/jacket/${songId % 10000}.png`;
+}
+
+function generateRateUrl(rate) {
+  return `https://maimai.lxns.net/assets/maimai/music_rank/${rate}.webp`;
+}
+
+function generateBadgeUrl(badge) {
+  if (!badge) {
+    badge = 'blank';
+  }
+  return `https://maimai.lxns.net/assets/maimai/music_icon/${badge}.webp`;
+}
+
+function getBackgroundColorClass(levelIndex) {
+  switch (levelIndex) {
+    case 0:
+      return 'basic-background';
+    case 1:
+      return 'advance-background';
+    case 2:
+      return 'expert-background';
+    case 3:
+      return 'master-background';
+    case 4:
+      return 'remaster-background';
+    default:
+      return '';
+  }
+}
 </script>
 
 <style scoped>
 @import url('./css/color.css');
 
-.song-card {
-  padding: 0;
-}
-
-.card-col {
-  margin-bottom: 30px;
-}
 
 .full-width-image {
   width: 100%;
@@ -194,16 +258,6 @@ export default {
   margin-top: 10px;
 }
 
-.card-footer {
-  margin-top: 8px;
-
-  display: flex;
-  flex-direction: column; /* 如果子容器是垂直排列，可以省略 */
-}
-
-.song-header-middle-item {
-  flex-grow: 1;
-}
 
 .rate-image {
   max-width: 100%;
@@ -235,4 +289,55 @@ export default {
   padding-left: 1px;
   padding-right: 1px;
 }
+
+.nickname {
+  text-align: center;
+  font-size: 1.3em;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rating {
+  text-align: center;
+  font-size: 1.3em;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-header {
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  text-align: left;
+  font-size: 1.3em;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.container {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.card-col {
+  z-index: 10;
+  margin-bottom: 30px;
+  transition: transform 0.3s ease; /* Add a transition for the transform property */
+}
+
+.card-col:hover {
+  transform: scale(1.05); /* Scale the card on hover */
+}
+
 </style>
+

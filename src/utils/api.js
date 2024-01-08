@@ -1,6 +1,6 @@
 // api.ts
 
-async function fetchData(username) {
+async function getData(username) {
     const apiUrl = "https://www.diving-fish.com/api/maimaidxprober/query/player";
 
     try {
@@ -29,4 +29,4 @@ async function fetchData(username) {
 
 }
 
-export default fetchData;
+export default getData;
