@@ -125,14 +125,13 @@
     </el-main>
   </el-container>
 </template>
-
-<!-- 其他部分保持不变 -->
-
 <script setup>
-import {ref, onMounted} from 'vue';
+import {ref, onMounted, watch} from 'vue';
+import {useRoute} from 'vue-router'; // 引入 useRoute
 import getData from './utils/api.js';
 import {Search} from '@element-plus/icons-vue';
 
+const route = useRoute(); // 使用 useRoute
 const isLoading = ref(true);
 const username = ref('');
 const nickname = ref('');
@@ -147,12 +146,18 @@ const font = ref({
   color: 'rgba(255, 255, 255, .15)',
 });
 
+watch(() => route.params.username, (newUsername) => {
+  if (newUsername) {
+    username.value = newUsername;
+    console.log('username:', username.value);
+    fetchData();
+  }
+});
+
 onMounted(() => {
   for (let i = 0; i < 50; i++) {
     tempArr.value.push(i);
   }
-  username.value = getUsernameFromURL();
-  fetchData();
 });
 
 function goTo() {
@@ -183,10 +188,6 @@ async function fetchData() {
   isLoading.value = false;
 }
 
-function getUsernameFromURL() {
-  const pathSegments = window.location.pathname.split('/');
-  return pathSegments[pathSegments.length - 1];
-}
 
 function generateImageUrl(songId) {
   return `https://lxns.org/maimai/jacket/${songId % 10000}.png`;
