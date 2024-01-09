@@ -8,6 +8,7 @@
         <el-col :span="6" :xs="14" class="header-right hidden-md-and-down">
           <el-input
               v-model="username"
+              @change="goTo()"
               placeholder="请输入水鱼用户名"
               class="input-with-select"
           >
@@ -266,7 +267,6 @@ function formatStatTitle(key) {
 }
 
 @media (max-width: 768px) {
-
   .title {
     text-align: center;
   }
