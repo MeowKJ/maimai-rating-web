@@ -5,7 +5,7 @@
         <el-col class="title" :span=6 :xs="24">
           Maimai的频道网页查分器
         </el-col>
-        <el-col :span="6" :xs="14" class="header-right hidden-md-and-down">
+        <el-col :span="6" :xs="24" class="header-right">
           <el-input
               v-model="username"
               @change="goTo()"

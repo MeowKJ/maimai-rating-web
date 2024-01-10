@@ -59,18 +59,18 @@ const props = defineProps({
 
 
 const generateImageUrl = (songId) => {
-  return `https://lxns.org/maimai/jacket/${songId % 10000}.png`;
+  return `https://maimai.mpas.top/assets/cover/${songId}`;
 };
 
 const generateRateUrl = (rate) => {
-  return `https://maimai.lxns.net/assets/maimai/music_rank/${rate}.webp`;
+  return `https://maimai.mpas.top/assets/rank/${rate}`;
 };
 
 const generateBadgeUrl = (badge) => {
   if (!badge) {
     badge = 'blank';
   }
-  return `https://maimai.lxns.net/assets/maimai/music_icon/${badge}.webp`;
+  return `https://maimai.mpas.top/assets/badge/${badge}`;
 };
 
 const backgroundColorStyle = computed(() => {

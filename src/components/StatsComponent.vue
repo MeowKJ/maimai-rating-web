@@ -292,7 +292,7 @@ function initBadgePieChart1() {
 
   const option = {
     title: {
-      text: '徽章获得情况',
+      text: '徽章',
       left: 'center'
     },
     tooltip: {
@@ -351,7 +351,7 @@ function initBadgePieChart2() {
 
   const option = {
     title: {
-      text: '拼机徽章获得情况',
+      text: '双人徽章',
       left: 'center'
     },
     tooltip: {
