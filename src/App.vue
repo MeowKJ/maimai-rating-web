@@ -1,5 +1,5 @@
 <template>
-  <el-container class="container">
+  <el-container class="container" v-loading.fullscreen.lock="fullscreenLoading">
     <el-header class="user-header">
       <el-row>
         <el-col class="title" :span=6 :xs="24">
@@ -118,12 +118,11 @@
 <script setup>
 import {ref, onMounted, watch, computed} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
-import html2canvas from 'html2canvas';
+import {toPng} from 'html-to-image';
 import getData from './utils/api.js';
 import {Search} from '@element-plus/icons-vue';
 
 import 'element-plus/theme-chalk/display.css'
-
 import SongCard from './components/SongCard.vue';
 import StatsComponent from "./components/StatsComponent.vue";
 
@@ -147,7 +146,7 @@ const isFetchData = ref(false);
 const isSuccess = ref(false);
 const errorMessage = ref('');
 const tempArr = ref([]);
-
+const fullscreenLoading = ref(false);
 
 const totalSongsComputed = computed(() => {
   return totalSongs.value.map(song => {
@@ -222,23 +221,24 @@ async function fetchData() {
 
 async function captureScreenshot() {
   try {
-    const element = document.querySelector('.container');
-    await Promise.all(Array.from(element.getElementsByTagName('img')).map(img => {
-      return new Promise((resolve, reject) => {
-        if (img.complete && img.naturalHeight !== 0) {
-          resolve();
-        } else {
-          img.onload = resolve;
-          img.onerror = reject;
-        }
-      });
-    }));
+    fullscreenLoading.value = true; // 开始全屏加载
 
-    const canvas = await html2canvas(element);
-    const image = canvas.toDataURL('image/png');
-    downloadImage(image, 'screenshot.png');
+    const element = document.querySelector('.container');
+
+    // 保存原始背景色并设置新的背景色
+    const originalBackgroundColor = element.style.backgroundColor;
+    element.style.backgroundColor = '#E6E6FA'; // 设置为白色背景
+
+    const dataUrl = await toPng(element);
+
+    // 恢复原始背景色
+    element.style.backgroundColor = originalBackgroundColor;
+
+    downloadImage(dataUrl, 'screenshot.png');
   } catch (error) {
     console.error('截图出错：', error);
+  } finally {
+    fullscreenLoading.value = false; // 结束全屏加载
   }
 }
 
