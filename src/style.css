@@ -95,11 +95,10 @@ button:focus-visible {
 }
 
 html, body {
-    height: 100%;
+    width: 100%;
     margin: 0;
     padding: 0;
     background-image: url('https://i.imgs.ovh/2024/01/08/IHIHC.png');
-    background-size: cover;
     background-attachment: fixed;
     color: #1a1a1a;
 }
