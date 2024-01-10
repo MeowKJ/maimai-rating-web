@@ -3,7 +3,8 @@
     <el-row>
       <!-- 歌曲图片 -->
       <el-col :span="24" :sm="8" :lg="7" :xl="6">
-        <img :src="generateImageUrl(song.song_id)" alt="Card Image" class="song-image">
+        <img :src="generateImageUrl(song.song_id)" alt="Card Image" crossorigin="anonymous"
+             class="song-image">
       </el-col>
       <!-- 歌曲信息 -->
       <el-col :span="24" :sm="16" :lg="17" :xl="18">
@@ -25,13 +26,13 @@
                 {{ Number(song.achievements).toFixed(4) }}
               </el-col>
               <el-col :span="14" :sm="6">
-                <img :src="generateRateUrl(song.rate)" alt="" class="badge-image">
+                <img :src="generateRateUrl(song.rate)" alt="" crossorigin="anonymous" class="badge-image">
               </el-col>
               <el-col :span="5" :sm="3">
-                <img :src="generateBadgeUrl(song.fc)" alt="" class="badge-image">
+                <img :src="generateBadgeUrl(song.fc)" alt="" crossorigin="anonymous" class="badge-image">
               </el-col>
               <el-col :span="5" :sm="3">
-                <img :src="generateBadgeUrl(song.fs)" alt="" class="badge-image">
+                <img :src="generateBadgeUrl(song.fs)" alt="" crossorigin="anonymous" class="badge-image">
               </el-col>
             </el-row>
           </el-col>
@@ -103,7 +104,6 @@ const backgroundColorStyle = computed(() => {
   max-width: 100%;
   max-height: 100%;
   object-fit: cover;
-  display: block;
 }
 
 .song-title {

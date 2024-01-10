@@ -17,6 +17,8 @@
             </template>
             <template #append>
               <el-button :icon="Search" @click="goTo()" :disabled="isFetchData" circle/>
+              <el-button @click="captureScreenshot">截图</el-button>
+
             </template>
           </el-input>
         </el-col>
@@ -116,7 +118,7 @@
 <script setup>
 import {ref, onMounted, watch, computed} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
-
+import html2canvas from 'html2canvas';
 import getData from './utils/api.js';
 import {Search} from '@element-plus/icons-vue';
 
@@ -218,6 +220,37 @@ async function fetchData() {
   isLoading.value = false;
 }
 
+async function captureScreenshot() {
+  try {
+    const element = document.querySelector('.container');
+    await Promise.all(Array.from(element.getElementsByTagName('img')).map(img => {
+      return new Promise((resolve, reject) => {
+        if (img.complete && img.naturalHeight !== 0) {
+          resolve();
+        } else {
+          img.onload = resolve;
+          img.onerror = reject;
+        }
+      });
+    }));
+
+    const canvas = await html2canvas(element);
+    const image = canvas.toDataURL('image/png');
+    downloadImage(image, 'screenshot.png');
+  } catch (error) {
+    console.error('截图出错：', error);
+  }
+}
+
+
+function downloadImage(dataUrl, filename) {
+  const a = document.createElement('a');
+  a.href = dataUrl;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
 </script>
 
 <style scoped>
