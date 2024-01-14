@@ -25,13 +25,9 @@ function search() {
         class="input-with-select"
       >
         <template #prepend> 用户名: </template>
-        <template #append>
-          <el-button @click="search()" :disabled="isLoading" circle>
-            查询
-          </el-button>
-          <el-button @click="">截图</el-button>
-        </template>
       </el-input>
+      <el-button @click="search()" :disabled="isLoading" circle>查询</el-button>
+      <el-button @click="">截图</el-button>
     </el-col>
     <el-col class="nickname" :span="6" :xs="8">
       <span>昵称：{{ nickname }}</span>

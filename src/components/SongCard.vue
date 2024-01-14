@@ -3,8 +3,12 @@
     <el-row>
       <!-- 歌曲图片 -->
       <el-col :span="24" :sm="8" :lg="7" :xl="6">
-        <img :src="generateImageUrl(song.song_id)" alt="Card Image" crossorigin="anonymous"
-             class="song-image">
+        <img
+          :src="generateImageUrl(song.song_id)"
+          alt="Card Image"
+          crossorigin="anonymous"
+          class="song-image"
+        />
       </el-col>
       <!-- 歌曲信息 -->
       <el-col :span="24" :sm="16" :lg="17" :xl="18">
@@ -14,7 +18,9 @@
             <el-row class="song-header" :style="backgroundColorStyle">
               <el-col :span="4">{{ song.ra }}</el-col>
               <el-col :span="16">{{ song.level_label }} ({{ song.ds }})</el-col>
-              <el-col :span="4" class="song-header-item">#{{ index + 1 }}</el-col>
+              <el-col :span="4" class="song-header-item"
+                >#{{ props.index + 1 }}</el-col
+              >
             </el-row>
           </el-col>
           <!-- 歌曲标题 -->
@@ -26,13 +32,28 @@
                 {{ Number(song.achievements).toFixed(4) }}
               </el-col>
               <el-col :span="14" :sm="6">
-                <img :src="generateRateUrl(song.rate)" alt="" crossorigin="anonymous" class="badge-image">
+                <img
+                  :src="generateRateUrl(song.rate)"
+                  alt=""
+                  crossorigin="anonymous"
+                  class="badge-image"
+                />
               </el-col>
               <el-col :span="5" :sm="3">
-                <img :src="generateBadgeUrl(song.fc)" alt="" crossorigin="anonymous" class="badge-image">
+                <img
+                  :src="generateBadgeUrl(song.fc)"
+                  alt=""
+                  crossorigin="anonymous"
+                  class="badge-image"
+                />
               </el-col>
               <el-col :span="5" :sm="3">
-                <img :src="generateBadgeUrl(song.fs)" alt="" crossorigin="anonymous" class="badge-image">
+                <img
+                  :src="generateBadgeUrl(song.fs)"
+                  alt=""
+                  crossorigin="anonymous"
+                  class="badge-image"
+                />
               </el-col>
             </el-row>
           </el-col>
@@ -50,51 +71,56 @@
   </el-card>
 </template>
 
-<script setup>
-import {defineProps, computed} from 'vue';
+<script setup lang="ts">
+import { computed } from "vue";
+import type { SongData } from "../types/index";
+import type { PropType } from "vue";
 
 const props = defineProps({
-  song: Object,
-  index: Number
+  song: {
+    type: Object as PropType<any>,
+    required: true,
+  },
+  index: {
+    type: Number,
+    required: true,
+  },
 });
 
-
-const generateImageUrl = (songId) => {
+const generateImageUrl = (songId: any) => {
   return `https://maimai.mpas.top/assets/cover/${songId}`;
 };
 
-const generateRateUrl = (rate) => {
+const generateRateUrl = (rate: any) => {
   return `https://maimai.mpas.top/assets/rank/${rate}`;
 };
 
-const generateBadgeUrl = (badge) => {
+const generateBadgeUrl = (badge: string) => {
   if (!badge) {
-    badge = 'blank';
+    badge = "blank";
   }
   return `https://maimai.mpas.top/assets/badge/${badge}`;
 };
 
 const backgroundColorStyle = computed(() => {
-  switch (props.song.level_index) {
+  switch (props.song?.level_index ?? 0) {
     case 0:
-      return 'background-color: green;';
+      return "background-color: green;";
     case 1:
-      return 'background-color: yellow;';
+      return "background-color: yellow;";
     case 2:
-      return 'background-color: red;';
+      return "background-color: red;";
     case 3:
-      return 'background-color: purple;';
+      return "background-color: purple;";
     case 4:
-      return 'background-color: #dcbcfb;';
+      return "background-color: #dcbcfb;";
     default:
-      return '';
+      return "";
   }
 });
-
 </script>
 
 <style scoped>
-
 .song-image {
   width: 100%;
   display: block;
@@ -108,7 +134,7 @@ const backgroundColorStyle = computed(() => {
 
 .song-title {
   text-align: left;
-  font-size: 1.0em;
+  font-size: 1em;
   font-weight: bold;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -132,7 +158,6 @@ const backgroundColorStyle = computed(() => {
   padding-left: 1px;
   padding-right: 1px;
 }
-
 
 .song-header {
   font-size: 0.8em;
@@ -160,5 +185,4 @@ const backgroundColorStyle = computed(() => {
     height: 35px;
   }
 }
-
 </style>

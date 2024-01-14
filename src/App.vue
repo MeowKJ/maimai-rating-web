@@ -38,10 +38,7 @@
           </el-col>
           <el-divider border-style="dashed" />
         </el-row>
-        <StatsComponent
-          :songData="totalSongsComputed"
-          @update-stats="handleStatsUpdate"
-        />
+        <StatsComponent :b15-data="b15Songs" :b35-data="b35Songs" />
       </div>
       <div v-else>
         <el-result
@@ -62,11 +59,7 @@
           <span>Developed By Meow</span>
         </el-col>
         <el-col :span="12" class="footer-icons">
-          <el-tooltip
-            content="求求点个⭐吧/GPL-3.0开源"
-            effect="light"
-            placement="top"
-          >
+          <el-tooltip content="GPL-3.0开源" effect="light" placement="top">
             <a
               href="https://github.com/MeowKJ/maimai-rating-web"
               target="_blank"
@@ -88,11 +81,11 @@
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
 
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { toPng } from "html-to-image";
 
-import { getData } from "./utils/api";
+import { getDataFromDivingFish } from "./utils/api";
 import { useUserStore } from "./store/user";
 
 import "element-plus/theme-chalk/display.css";
@@ -107,16 +100,20 @@ const userStore = useUserStore();
 
 const { username, nickname, rating, isLoading, b15sum, b35sum } =
   storeToRefs(userStore);
-const { updateStats } = userStore;
 
-const totalSongs = ref([]);
+const b15Songs = ref([]);
+const b35Songs = ref([]);
+
 const isSuccess = ref(false);
 const errorMessage = ref("");
 
 const fullscreenLoading = ref(false);
 
 const totalSongsComputed = computed(() => {
-  return totalSongs.value.map((song) => {
+  const totalSongs = [];
+  totalSongs.push(b15Songs.value);
+  totalSongs.push(b35Songs.value);
+  return totalSongs.map((song: any) => {
     return song;
   });
 });
@@ -132,10 +129,6 @@ watch(
   }
 );
 
-function handleStatsUpdate(stats) {
-  updateStats(stats.b15sum, stats.b35sum);
-}
-
 async function fetchData() {
   try {
     if (!username.value) {
@@ -144,20 +137,20 @@ async function fetchData() {
       return;
     }
     isLoading.value = true;
-    totalSongs.value = [];
+    b15Songs.value = [];
+    b35Songs.value = [];
 
-    const data = await getData(username.value);
+    const data = await getDataFromDivingFish(username.value);
     console.log("获取到的数据：", data);
 
-    const dxData = data["charts"]["dx"] || []; // 防止未定义的数据
-    const sdData = data["charts"]["sd"] || []; // 防止未定义的数据
+    b15Songs.value = data["charts"]["dx"] || []; // 防止未定义的数据
+    b35Songs.value = data["charts"]["sd"] || []; // 防止未定义的数据
 
-    totalSongs.value.push(dxData);
-    totalSongs.value.push(sdData);
     // 更新 user 对象
 
     nickname.value = data["nickname"];
     rating.value = data["rating"];
+
     isSuccess.value = true;
   } catch (error) {
     isSuccess.value = false;
@@ -190,7 +183,7 @@ async function captureScreenshot() {
   }
 }
 
-function downloadImage(dataUrl, filename) {
+function downloadImage(dataUrl: string, filename: string) {
   const a = document.createElement("a");
   a.href = dataUrl;
   a.download = filename;
