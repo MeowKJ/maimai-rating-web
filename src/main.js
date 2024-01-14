@@ -1,4 +1,6 @@
 import {createApp} from 'vue'
+import { createPinia } from 'pinia'
+
 import router from './router'; // 导入创建的路由实例
 
 import './style.css'
@@ -8,4 +10,10 @@ import {inject} from '@vercel/analytics';
 
 inject();  // Vercel 分析
 
-createApp(App).use(router).mount('#app');
+const pinia = createPinia()
+
+const app = createApp(App)
+
+app.use(router)
+app.use(pinia)
+app.mount('#app')
