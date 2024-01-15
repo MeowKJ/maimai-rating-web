@@ -1,10 +1,11 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
+import type { UserData } from "@/types";
+
 export const useUserStore = defineStore("user", () => {
   const username = ref("");
-  const nickname = ref("");
-  const rating = ref(0);
+  const userData = ref<UserData | null>(null);
   const b15sum = ref(0);
   const b35sum = ref(0);
   const isLoading = ref(false);
@@ -16,8 +17,7 @@ export const useUserStore = defineStore("user", () => {
 
   return {
     username,
-    nickname,
-    rating,
+    userData,
     b15sum,
     b35sum,
     isLoading,

@@ -1,29 +1,43 @@
+export interface apiData {
+  userData: UserData;
+  songData: Songs;
+}
+
 export interface SongData {
   achievements: number;
-  dxScore: number;
-  starNumber: number;
-  fc: "fc" | "fcp" | "ap" | "app";
-  fs: "fs" | "fsp" | "fsd" | "fsdp";
+  fc: null | string;
+  fs: null | string;
   level: string;
-  level_index: 0 | 1 | 2 | 3 | 4 | 5;
-  level_label: "Basic" | "Advance" | "Expert" | "Master" | "RE:MASTER";
+  level_index: number;
+  level_label: string;
   ds: number;
   ra: number;
   rate: string;
-  song_id: number;
+  id: number;
   title: string;
-  type: string;
+  type: "DX" | "SD";
+  dxScore: number;
+  starNumber: number;
+  additionalData: {
+    notes: songNotes;
+    note_designer: string;
+    version: number;
+    bpm: number;
+    genre: string;
+  };
 }
 
-export interface RawUser {
-  username: string;
-  nickname: string;
-  avatarUrl: string;
-  plateId: number;
-  backgroundId: number;
-  rankId: number;
-  classId: number;
-  starCount: number;
+interface songNotes {
+  tap: number;
+  hold: number;
+  slide: number;
+  break: number;
+  touch: number;
+  total: number;
+}
+export interface Songs {
+  b15: SongData[];
+  b35: SongData[];
 }
 
 export interface CombinedStatsData {
@@ -39,4 +53,19 @@ export interface CombinedStatsData {
   b35sum: number;
   b35range: number;
   b35stdDev: number;
+}
+
+export interface UserData {
+  username: string;
+  nickname: string;
+  rating: number;
+  avatarUrl: string;
+  plateId: number;
+  backgroundId: number;
+  rankId: number;
+  classId: number;
+  starCount: number;
+  trophyName: string;
+  trophyColor: string;
+  api: "LXNS" | "FISH";
 }

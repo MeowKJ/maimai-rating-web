@@ -4,7 +4,7 @@
       <!-- 歌曲图片 -->
       <el-col :span="24" :sm="8" :lg="7" :xl="6">
         <img
-          :src="generateImageUrl(song.song_id)"
+          :src="generateImageUrl(song.id)"
           alt="Card Image"
           crossorigin="anonymous"
           class="song-image"
@@ -62,7 +62,7 @@
             <el-row class="song-footer">
               <el-col :span="4">{{ song.type }}</el-col>
               <el-col :span="12">{{ song.dxScore }}</el-col>
-              <el-col :span="8">id:{{ song.song_id }}</el-col>
+              <el-col :span="8">id:{{ song.id }}</el-col>
             </el-row>
           </el-col>
         </el-row>
@@ -73,28 +73,22 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { PropType } from "vue";
+import type { SongData } from "@/types";
 
-const props = defineProps({
-  song: {
-    type: Object as PropType<any>,
-    required: true,
-  },
-  index: {
-    type: Number,
-    required: true,
-  },
-});
+const props = defineProps<{
+  song: SongData;
+  index: number;
+}>();
 
-const generateImageUrl = (songId: any) => {
+const generateImageUrl = (songId: number) => {
   return `https://maimai.mpas.top/assets/cover/${songId}`;
 };
 
-const generateRateUrl = (rate: any) => {
+const generateRateUrl = (rate: string) => {
   return `https://maimai.mpas.top/assets/rank/${rate}`;
 };
 
-const generateBadgeUrl = (badge: string) => {
+const generateBadgeUrl = (badge: string | null) => {
   if (!badge) {
     badge = "blank";
   }

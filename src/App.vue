@@ -79,14 +79,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, onMounted } from "vue";
 
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { toPng } from "html-to-image";
 
-import { getDataFromDivingFish } from "./utils/api";
+import { getDataFromDivingFish, getUserDataFromLuoXue } from "./utils/api";
 import { useUserStore } from "./store/user";
+import { isValidNumber } from "./utils/tools";
+
+import type { Ref } from "vue";
+import type { SongData } from "./types";
 
 import "element-plus/theme-chalk/display.css";
 
@@ -98,11 +102,11 @@ import LoadingComponent from "./components/LoadingComponent.vue";
 const route = useRoute();
 const userStore = useUserStore();
 
-const { username, nickname, rating, isLoading, b15sum, b35sum } =
+const { username, userData, isLoading, b15sum, b35sum } =
   storeToRefs(userStore);
 
-const b15Songs = ref([]);
-const b35Songs = ref([]);
+const b15Songs: Ref<SongData[]> = ref([]);
+const b35Songs: Ref<SongData[]> = ref([]);
 
 const isSuccess = ref(false);
 const errorMessage = ref("");
@@ -110,12 +114,10 @@ const errorMessage = ref("");
 const fullscreenLoading = ref(false);
 
 const totalSongsComputed = computed(() => {
-  const totalSongs = [];
+  const totalSongs: SongData[][] = [];
   totalSongs.push(b15Songs.value);
   totalSongs.push(b35Songs.value);
-  return totalSongs.map((song: any) => {
-    return song;
-  });
+  return totalSongs;
 });
 
 watch(
@@ -136,60 +138,39 @@ async function fetchData() {
       errorMessage.value = "发现用户名为空";
       return;
     }
+
     isLoading.value = true;
     b15Songs.value = [];
     b35Songs.value = [];
 
-    const data = await getDataFromDivingFish(username.value);
+    let data = null;
+    if (isValidNumber(username.value)) {
+      data = await getUserDataFromLuoXue(username.value);
+    } else {
+      data = await getDataFromDivingFish(username.value);
+    }
+
+    if (data == null) {
+      isLoading.value = false;
+      isSuccess.value = false;
+      errorMessage.value = "无法获取你的分数";
+      return;
+    }
+
     console.log("获取到的数据：", data);
 
-    b15Songs.value = data["charts"]["dx"] || []; // 防止未定义的数据
-    b35Songs.value = data["charts"]["sd"] || []; // 防止未定义的数据
-
-    // 更新 user 对象
-
-    nickname.value = data["nickname"];
-    rating.value = data["rating"];
-
+    userData.value = data.userData;
+    b15Songs.value = data.songData.b15;
+    b35Songs.value = data.songData.b35;
     isSuccess.value = true;
   } catch (error) {
+    isLoading.value = false;
     isSuccess.value = false;
     errorMessage.value =
       "无法获取你的分数，请检查用户名是否正确，同时确保没有设置隐私保护";
     console.error("出错：", error);
   }
   isLoading.value = false;
-}
-
-async function captureScreenshot() {
-  try {
-    fullscreenLoading.value = true; // 开始全屏加载
-
-    const element = document.querySelector(".container") as HTMLElement;
-    // 保存原始背景色并设置新的背景色
-    const originalBackgroundColor = element.style.backgroundColor;
-    element.style.backgroundColor = "#E6E6FA"; // 设置为白色背景
-
-    const dataUrl = await toPng(element);
-
-    // 恢复原始背景色
-    element.style.backgroundColor = originalBackgroundColor;
-
-    downloadImage(dataUrl, "screenshot.png");
-  } catch (error) {
-    console.error("截图出错：", error);
-  } finally {
-    fullscreenLoading.value = false; // 结束全屏加载
-  }
-}
-
-function downloadImage(dataUrl: string, filename: string) {
-  const a = document.createElement("a");
-  a.href = dataUrl;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
 }
 </script>
 

@@ -6,7 +6,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 const userStore = useUserStore();
-const { username, nickname, rating, isLoading } = storeToRefs(userStore);
+const { username, userData, isLoading } = storeToRefs(userStore);
 
 function search() {
   console.log("goTo use username: ", username.value);
@@ -30,9 +30,11 @@ function search() {
       <el-button @click="">截图</el-button>
     </el-col>
     <el-col class="nickname" :span="6" :xs="8">
-      <span>昵称：{{ nickname }}</span>
+      <span>昵称：{{ userData?.nickname }}</span>
     </el-col>
-    <el-col class="rating" :span="6" :xs="16"> DXRating:{{ rating }} </el-col>
+    <el-col class="rating" :span="6" :xs="16">
+      DXRating:{{ userData?.rating }}
+    </el-col>
   </el-row>
 </template>
 
