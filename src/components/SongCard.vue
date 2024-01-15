@@ -73,7 +73,6 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { SongData } from "../types/index";
 import type { PropType } from "vue";
 
 const props = defineProps({

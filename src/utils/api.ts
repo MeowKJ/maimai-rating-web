@@ -1,4 +1,9 @@
 // api.ts
+declare const process: {
+  env: {
+    VUE_APP_API_KEY: string; // 根据需要调整类型
+  };
+};
 
 export async function getDataFromDivingFish(username: string) {
   const apiUrl = "https://www.diving-fish.com/api/maimaidxprober/query/player";

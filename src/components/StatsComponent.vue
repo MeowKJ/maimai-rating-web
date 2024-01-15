@@ -41,10 +41,12 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
+import { storeToRefs } from "pinia";
+
 import { initChart } from "../utils/charts";
 import { useUserStore } from "../store/user";
-import { storeToRefs } from "pinia";
-import type { CombinedStatsData } from "../types/index";
+import type { CombinedStatsData } from "../types";
+
 const userStore = useUserStore();
 
 const { b15sum, b35sum } = storeToRefs(userStore);
