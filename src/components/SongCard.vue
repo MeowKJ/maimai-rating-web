@@ -74,26 +74,16 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import type { SongData } from "@/types";
+import {
+  generateBadgeUrl,
+  generateImageUrl,
+  generateRateUrl,
+} from "@/utils/url";
 
 const props = defineProps<{
   song: SongData;
   index: number;
 }>();
-
-const generateImageUrl = (songId: number) => {
-  return `https://maimai.mpas.top/assets/cover/${songId}`;
-};
-
-const generateRateUrl = (rate: string) => {
-  return `https://maimai.mpas.top/assets/rank/${rate}`;
-};
-
-const generateBadgeUrl = (badge: string | null) => {
-  if (!badge) {
-    badge = "blank";
-  }
-  return `https://maimai.mpas.top/assets/badge/${badge}`;
-};
 
 const backgroundColorStyle = computed(() => {
   switch (props.song?.level_index ?? 0) {

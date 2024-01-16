@@ -176,12 +176,13 @@ async function fetchData() {
 
 <style scoped>
 .user-header {
+  margin-bottom: 100px;
   align-items: center;
   justify-content: center;
 }
 .container {
   margin: 0;
-  padding: 0;
+  padding: 30px;
   height: 100%;
   width: 100%;
 }
