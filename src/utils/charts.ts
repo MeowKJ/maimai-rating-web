@@ -308,13 +308,13 @@ function initBadgePieChart2(
 
 export function initChart(
   doms: HTMLElement[],
-  b15dataList: any[],
+  b15DataList: any[],
   b35DataList: any[]
 ) {
-  const totalDataList = b15dataList.concat(b35DataList);
+  const totalDataList = b15DataList.concat(b35DataList);
   initLevelPieChart(doms[0], totalDataList);
   initLevelDistributionChart(doms[1], totalDataList);
-  initTypePieChart(doms[2], b15dataList);
+  initTypePieChart(doms[2], b35DataList);
   initRatePieChart(doms[3], totalDataList);
   initBadgePieChart1(doms[4], totalDataList);
   initBadgePieChart2(doms[5], totalDataList);
