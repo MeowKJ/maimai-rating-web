@@ -31,9 +31,6 @@ const courseRankUrl = computed(() => {
 
 const classRankUrl = computed(() => {
   if (userData.value) {
-    if (userData.value.classId === 0) {
-      return "";
-    }
     return `https://maimai.mpas.top/assets/class_rank/${userData.value.classId}`;
   }
   return "";
