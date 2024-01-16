@@ -5,11 +5,10 @@ import App from "../App.vue";
 
 const routes = [
   {
-    path: "/:username", // 动态路由参数 :username
+    path: "/:username",
     name: "App",
     component: App,
   },
-  // 其他路由规则
 ];
 
 const router = createRouter({

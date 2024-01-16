@@ -45,22 +45,16 @@ import { storeToRefs } from "pinia";
 
 import { initChart } from "../utils/charts";
 import { useUserStore } from "../store/user";
-import type { CombinedStatsData } from "../types";
-
+import type { CombinedStatsData, SongData } from "../types";
 const userStore = useUserStore();
 
 const { b15sum, b35sum } = storeToRefs(userStore);
 
-const props = defineProps({
-  b15Data: {
-    type: Array,
-    required: true,
-  },
-  b35Data: {
-    type: Array,
-    required: true,
-  },
-});
+const props = defineProps<{
+  b15Data: SongData[];
+  b35Data: SongData[];
+}>();
+
 const typeChart = ref<HTMLElement | null>(null);
 const levelChart = ref<HTMLElement | null>(null);
 const levelDistributionChart = ref<HTMLElement | null>(null);

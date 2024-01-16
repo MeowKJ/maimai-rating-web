@@ -1,0 +1,207 @@
+.bg-frame .balloon-1 {
+  background: transparent url(https://maimai.mpas.top/assets/bg/img_balloon_o)
+    no-repeat;
+  background-size: contain;
+  width: 55px;
+  height: 55px;
+
+  @media only screen and (min-width: 769px) {
+    width: 110px;
+    height: 110px;
+  }
+}
+
+.bg-frame .balloon-2 {
+  background: transparent url(https://maimai.mpas.top/assets/bg/img_balloon_p)
+    no-repeat;
+  background-size: contain;
+  width: 77px;
+  height: 77px;
+
+  @media only screen and (min-width: 769px) {
+    width: 154px;
+    height: 154px;
+  }
+}
+
+.bg-frame .balloon-3 {
+  background: transparent url(https://maimai.mpas.top/assets/bg/img_balloon_w1)
+    no-repeat;
+  background-size: contain;
+  width: 63.5px;
+  height: 63.5px;
+
+  @media only screen and (min-width: 769px) {
+    width: 127px;
+    height: 127px;
+  }
+}
+
+.bg-frame .balloon-4 {
+  background: transparent url(https://maimai.mpas.top/assets/bg/img_balloon_w2)
+    no-repeat;
+  background-size: contain;
+  width: 79.5px;
+  height: 79.5px;
+
+  @media only screen and (min-width: 769px) {
+    width: 159px;
+    height: 159px;
+  }
+}
+
+.bg-frame .balloon-5 {
+  background: transparent url(https://maimai.mpas.top/assets/bg/img_balloon_b)
+    no-repeat;
+  background-size: contain;
+  width: 75.5px;
+  height: 75.5px;
+
+  @media only screen and (min-width: 769px) {
+    width: 151px;
+    height: 151px;
+  }
+}
+
+.bg-frame .balloon-6 {
+  background: transparent url(https://maimai.mpas.top/assets/bg/img_balloon_dp)
+    no-repeat;
+  background-size: contain;
+  width: 88px;
+  height: 88px;
+
+  @media only screen and (min-width: 769px) {
+    width: 176px;
+    height: 176px;
+  }
+}
+
+.bg-frame .balloon-7 {
+  background: transparent url(https://maimai.mpas.top/assets/bg/img_balloon_y)
+    no-repeat;
+  background-size: contain;
+  width: 79px;
+  height: 79px;
+
+  @media only screen and (min-width: 769px) {
+    width: 158px;
+    height: 158px;
+  }
+}
+
+.bg-frame .giftbox {
+  background: transparent url(https://maimai.mpas.top/assets/bg/img_giftbox)
+    no-repeat;
+  background-size: contain;
+  width: 59px;
+  height: 68px;
+}
+
+.bg-frame .items {
+  position: fixed;
+}
+
+.bg-frame .items-anm1 {
+  animation: upDown1 2s cubic-bezier(0.33, 0.04, 0.68, 0.94) infinite alternate;
+}
+
+.bg-frame .items-anm2 {
+  animation: upDown2 3s cubic-bezier(0.36, 0.09, 0.63, 0.9) infinite alternate;
+}
+
+@media only screen and (min-width: 769px) {
+  .bg--frame .balloon-4 {
+    width: 159px;
+    height: 159px;
+  }
+  .bg-frame .items-anm1 {
+    animation: upDown1PC 3s cubic-bezier(0.33, 0.04, 0.68, 0.94) infinite
+      alternate;
+  }
+
+  .bg-frame .items-anm2 {
+    animation: upDown2PC 4s cubic-bezier(0.36, 0.09, 0.63, 0.9) infinite
+      alternate;
+  }
+}
+
+.ribbin-1 {
+  background: transparent url("https://maimai.mpas.top/assets/bg/img_ribbin_1")
+    no-repeat;
+  background-size: contain;
+  width: 16px;
+  height: 121px;
+}
+
+.ribbin-2 {
+  background: transparent url("https://maimai.mpas.top/assets/bg/img_ribbin_2")
+    no-repeat;
+  background-size: contain;
+  width: 18.5px;
+  height: 161.5px;
+}
+
+.ribbin-3 {
+  background: transparent url("https://maimai.mpas.top/assets/bg/img_ribbin_2")
+    no-repeat;
+  background-size: contain;
+  width: 18.5px;
+  height: 161.5px;
+}
+
+.ribbin-4 {
+  background: transparent url("https://maimai.mpas.top/assets/bg/img_ribbin_2")
+    no-repeat;
+  background-size: contain;
+  width: 18.5px;
+  height: 161.5px;
+}
+
+.ribbin-5 {
+  background: transparent url("https://maimai.mpas.top/assets/bg/img_ribbin_2")
+    no-repeat;
+  background-size: contain;
+  width: 18.5px;
+  height: 161.5px;
+}
+
+.ribbin-6 {
+  background: transparent url("https://maimai.mpas.top/assets/bg/img_ribbin_3")
+    no-repeat;
+  background-size: contain;
+  width: 15px;
+  height: 165px;
+}
+
+@media only screen and (min-width: 769px) {
+  /* Your styles for larger screens go here */
+  .ribbin-1 {
+    width: 32px;
+    height: 242px;
+  }
+
+  .ribbin-2 {
+    width: 37px;
+    height: 323px;
+  }
+
+  .ribbin-3 {
+    width: 37px;
+    height: 323px;
+  }
+
+  .ribbin-4 {
+    width: 37px;
+    height: 323px;
+  }
+
+  .ribbin-5 {
+    width: 37px;
+    height: 323px;
+  }
+
+  .ribbin-6 {
+    width: 30px;
+    height: 330px;
+  }
+}

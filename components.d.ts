@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    BackgroundComponent: typeof import('./src/components/BackgroundComponent.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
@@ -15,16 +16,18 @@ declare module 'vue' {
     ElDivider: typeof import('element-plus/es')['ElDivider']
     ElFooter: typeof import('element-plus/es')['ElFooter']
     ElHeader: typeof import('element-plus/es')['ElHeader']
-    ElInput: typeof import('element-plus/es')['ElInput']
     ElMain: typeof import('element-plus/es')['ElMain']
+    ElRate: typeof import('element-plus/es')['ElRate']
     ElResult: typeof import('element-plus/es')['ElResult']
     ElRow: typeof import('element-plus/es')['ElRow']
     ElSkeleton: typeof import('element-plus/es')['ElSkeleton']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
+    FooterComponent: typeof import('./src/components/FooterComponent.vue')['default']
     LoadingComponent: typeof import('./src/components/LoadingComponent.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SongCard: typeof import('./src/components/SongCard.vue')['default']
+    SongComponet: typeof import('./src/components/SongComponet.vue')['default']
     StatsComponent: typeof import('./src/components/StatsComponent.vue')['default']
     UserComponent: typeof import('./src/components/UserComponent.vue')['default']
   }

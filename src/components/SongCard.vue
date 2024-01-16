@@ -60,9 +60,18 @@
           <!-- 歌曲额外信息 -->
           <el-col>
             <el-row class="song-footer">
-              <el-col :span="4">{{ song.type }}</el-col>
-              <el-col :span="12">{{ song.dxScore }}</el-col>
-              <el-col :span="8">id:{{ song.id }}</el-col>
+              <el-col :span="2" :xs="8">{{ song.type }}</el-col>
+              <el-col :span="4" :xs="8">{{ song.dxScore }}</el-col>
+              <el-col :span="12" :xs="18" class="star-number"
+                ><el-rate
+                  disabled
+                  v-model="song.starNumber"
+                  :colors="starNumberColors"
+                  :low-threshold="lowThreshold"
+                  :highThreshold="highThreshold"
+                  size="small"
+              /></el-col>
+              <el-col :span="6">id:{{ song.id }}</el-col>
             </el-row>
           </el-col>
         </el-row>
@@ -72,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { ref, computed } from "vue";
 import type { SongData } from "@/types";
 import {
   generateBadgeUrl,
@@ -84,6 +93,9 @@ const props = defineProps<{
   song: SongData;
   index: number;
 }>();
+const starNumberColors = ref(["#99A9BF", "#F7BA2A", "#f37800"]);
+const lowThreshold = ref(1);
+const highThreshold = ref(3);
 
 const backgroundColorStyle = computed(() => {
   switch (props.song?.level_index ?? 0) {
@@ -104,6 +116,13 @@ const backgroundColorStyle = computed(() => {
 </script>
 
 <style scoped>
+.star-number {
+  margin: 0;
+  padding: 0;
+  height: 10px;
+  transform: translateY(-5px);
+}
+
 .song-image {
   width: 100%;
   display: block;
@@ -166,6 +185,10 @@ const backgroundColorStyle = computed(() => {
 @media (max-width: 768px) {
   .badge-image {
     height: 35px;
+  }
+
+  .star-number {
+    transform: translateY(-5px);
   }
 }
 </style>
