@@ -14,7 +14,9 @@
     "@vercel/analytics": "^1.1.1",
     "echarts": "^5.4.3",
     "element-plus": "^2.4.4",
+    "gsap": "^3.12.4",
     "html-to-image": "^1.11.11",
+    "lottie-web": "^5.12.2",
     "pinia": "^2.1.7",
     "vue": "^3.3.11",
     "vue-router": "^4.2.5"

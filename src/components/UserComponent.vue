@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useUserStore } from "../store/user";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
+
+import { useUserStore } from "../store/user";
 const router = useRouter();
 
 const userStore = useUserStore();
@@ -47,7 +48,7 @@ const trophyText = computed(() => {
   if (userData.value) {
     return userData.value.trophyName;
   }
-  return "你好";
+  return "欢迎使用网页版查分器";
 });
 
 const ratingText = computed(() => {
@@ -137,15 +138,15 @@ function search() {
 <style scoped>
 .user-card {
   flex: auto;
-  max-width: 100%; /* 确保卡片宽度不超过其父容器 */
-  overflow: hidden; /* 隐藏溢出的内容 */
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .name-plate {
   padding: 0;
   height: 100px;
   position: relative;
-  margin: 20px; /* 添加外边距以保持与屏幕边缘的距离 */
+  margin-top: 20px; /* 添加外边距以保持与屏幕边缘的距离 */
   display: inline-block;
 }
 

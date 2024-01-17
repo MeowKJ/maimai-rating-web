@@ -3,7 +3,7 @@ import { createPinia } from "pinia";
 
 import router from "./router"; // 导入创建的路由实例
 
-import "./style.css";
+import "@/asstes/styles/style.css";
 import App from "./App.vue";
 
 import { inject } from "@vercel/analytics";

@@ -3,7 +3,6 @@
     <el-header class="user-header">
       <UserComponent />
     </el-header>
-
     <el-main class="main">
       <div v-if="isLoading"><LoadingComponent /></div>
       <div v-else-if="isSuccess">
@@ -11,20 +10,10 @@
         <StatsComponent :b15-data="b15Songs" :b35-data="b35Songs" />
       </div>
       <div v-else>
-        <el-result
-          icon="error"
-          title="出错了"
-          :sub-title="errorMessage"
-          style=""
-        >
-          <template #extra>
-            <el-button type="primary">Back</el-button>
-          </template>
-        </el-result>
+        <MessageComponent :icon="statusIcon" :error-message="errorMessage" />
       </div>
     </el-main>
-
-    ><FooterComponent></FooterComponent>
+    <FooterComponent />
   </el-container>
   <BackgroundComponent />
 </template>
@@ -32,20 +21,22 @@
 <script setup lang="ts">
 import { ref, watch, computed } from "vue";
 import { useRoute } from "vue-router";
-import { toPng } from "html-to-image";
 import { storeToRefs } from "pinia";
-import { useUserStore } from "./store/user";
-import { getDataFromDivingFish, getUserDataFromLuoXue } from "./utils/api";
-import { isValidNumber } from "./utils/tools";
+import { useUserStore } from "@/store/user";
+import { getDataFromDivingFish, getUserDataFromLuoXue } from "@/utils/api";
+import { isValidNumber } from "@/utils/tools";
 import type { Ref } from "vue";
-import type { SongData } from "./types";
+import type { SongData } from "@/types";
 
 const route = useRoute();
 const userStore = useUserStore();
+
 const { isLoading, username, userData } = storeToRefs(userStore);
 
 const isSuccess = ref(false);
-const errorMessage = ref("请在/后面输入你的用户名");
+const errorMessage = ref("请输入 <用户名> ");
+const statusIcon = ref("info");
+
 const fullscreenLoading = ref(false);
 const b15Songs: Ref<SongData[]> = ref([]);
 const b35Songs: Ref<SongData[]> = ref([]);
@@ -63,6 +54,12 @@ watch(
     if (newUsername) {
       username.value = newUsername as string;
       console.log("username:", username.value);
+      if (!username.value) {
+        isSuccess.value = false;
+        errorMessage.value = "发现用户名为空";
+        statusIcon.value = "error";
+        return;
+      }
       fetchData();
     }
   }
@@ -70,13 +67,7 @@ watch(
 
 async function fetchData() {
   try {
-    if (!username.value) {
-      isSuccess.value = false;
-      errorMessage.value = "发现用户名为空";
-      return;
-    }
     isLoading.value = true;
-
     b15Songs.value = [];
     b35Songs.value = [];
 
@@ -90,11 +81,12 @@ async function fetchData() {
     if (data == null) {
       isLoading.value = false;
       isSuccess.value = false;
+      statusIcon.value = "error";
       errorMessage.value = "无法获取你的分数";
       return;
     }
 
-    console.log("获取到的数据：", data);
+    console.log("Get Data:", data);
 
     userData.value = data.userData;
     b15Songs.value = data.songData.b15;
@@ -103,6 +95,7 @@ async function fetchData() {
   } catch (error) {
     isLoading.value = false;
     isSuccess.value = false;
+    statusIcon.value = "error";
     errorMessage.value =
       "无法获取你的分数，请检查用户名是否正确，同时确保没有设置隐私保护";
     console.error("出错：", error);
@@ -111,6 +104,7 @@ async function fetchData() {
 }
 
 import "element-plus/theme-chalk/display.css";
+import MessageComponent from "./components/MessageComponent.vue";
 </script>
 
 <style scoped>

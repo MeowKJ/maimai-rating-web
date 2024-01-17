@@ -82,12 +82,12 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import type { SongData } from "@/types";
+import type { SongData } from "../types";
 import {
   generateBadgeUrl,
   generateImageUrl,
   generateRateUrl,
-} from "@/utils/url";
+} from "../utils/url";
 
 const props = defineProps<{
   song: SongData;

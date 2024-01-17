@@ -4,9 +4,8 @@ import { useUserStore } from "../store/user";
 
 import type { SongData } from "../types";
 
-import SongCard from "./SongCard.vue";
-
 import "element-plus/theme-chalk/display.css";
+import SongCard from "@/widgets/SongCard.vue";
 
 const userStore = useUserStore();
 
@@ -43,7 +42,7 @@ const props = defineProps<{
       :xl="5"
       :key="(i + 1) * index"
     >
-      <song-card :song="song" :index="index"></song-card>
+      <SongCard :song="song" :index="index" />
     </el-col>
     <el-divider border-style="dashed" />
   </el-row>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import "../css/animation.css";
-import "../css/balloon.css";
-import "../css/position.css";
+import "@/asstes/styles/animation.css";
+import "@/asstes/styles/balloon.css";
+import "@/asstes/styles/position.css";
 </script>
 
 <template>
