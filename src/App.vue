@@ -16,6 +16,7 @@
     <FooterComponent />
   </el-container>
   <BackgroundComponent />
+  <ToTop />
 </template>
 
 <script setup lang="ts">
@@ -27,7 +28,7 @@ import { getDataFromDivingFish, getUserDataFromLuoXue } from "@/utils/api";
 import { isValidNumber } from "@/utils/tools";
 import type { Ref } from "vue";
 import type { SongData } from "@/types";
-
+import ToTop from "@/widgets/ToTop.vue";
 const route = useRoute();
 const userStore = useUserStore();
 
