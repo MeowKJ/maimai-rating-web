@@ -21,7 +21,7 @@ export interface SongData {
   additionalData: {
     notes: songNotes;
     note_designer: string;
-    version: number;
+    version: string;
     bpm: number;
     genre: string;
   };

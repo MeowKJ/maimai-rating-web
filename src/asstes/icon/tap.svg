@@ -1,0 +1,11 @@
+<svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <filter height="200%" width="200%" y="-50%" x="-50%" id="svg_1_blur">
+   <feGaussianBlur stdDeviation="1" in="SourceGraphic"/>
+  </filter>
+ </defs>
+ <g>
+  <title>Layer 1</title>
+  <ellipse stroke="#000" stroke-width="10" filter="url(#svg_1_blur)" ry="16.96526" rx="17.58399" id="svg_1" cy="24.63031" cx="24.83179" fill="none"/>
+ </g>
+</svg>

@@ -2,6 +2,7 @@
 import "@/asstes/styles/animation.css";
 import "@/asstes/styles/balloon.css";
 import "@/asstes/styles/position.css";
+import BalloonBear from "@/widgets/BalloonBear.vue";
 </script>
 
 <template>
@@ -49,6 +50,7 @@ import "@/asstes/styles/position.css";
         </div>
       </div>
     </div>
+    <BalloonBear src="https://i0.imgs.ovh/2024/01/19/skXCC.png" />
   </div>
 </template>
 

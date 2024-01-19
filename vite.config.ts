@@ -7,11 +7,12 @@ import Components from "unplugin-vue-components/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import CompressionPlugin from "vite-plugin-compression";
 import { visualizer } from "rollup-plugin-visualizer";
-
+import svgLoader from "vite-svg-loader";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
+    svgLoader(),
     CompressionPlugin(),
     visualizer({
       gzipSize: true,

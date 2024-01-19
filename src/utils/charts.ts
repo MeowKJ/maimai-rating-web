@@ -1,29 +1,59 @@
+import type { SongData } from "@/types";
 import * as echarts from "echarts";
+import type { LinearGradientObject } from "echarts";
+import type { EChartsOption } from "echarts";
 
 function calculateCounts<T>(
   data: T[],
-  property: keyof T
+  path: string[],
+  nameMapping: Record<string, string> = {}
 ): Record<string, number> {
-  return data.reduce((counts: Record<string, number>, item: T) => {
-    const key = item[property];
-    if (key !== undefined) {
-      const keyStr = String(key);
+  // 首先，和原来一样计算计数
+  const counts = data.reduce((counts: Record<string, number>, item: T) => {
+    let currentValue: any = item;
+    for (const prop of path) {
+      currentValue = currentValue?.[prop];
+      if (currentValue === undefined) break;
+    }
+    if (currentValue !== undefined) {
+      let keyStr = String(currentValue);
+      keyStr = nameMapping[keyStr] || keyStr;
       counts[keyStr] = (counts[keyStr] || 0) + 1;
     }
     return counts;
   }, {});
+
+  // 使用 nameMapping 的 keys 创建排序顺序
+  const sortOrder = Object.values(nameMapping);
+
+  // 如果 nameMapping 提供了排序规则，则对结果进行排序
+  if (sortOrder.length > 0) {
+    // 创建一个映射，用于快速查找 sortOrder 中每个 key 的索引
+    const sortOrderIndex = new Map(sortOrder.map((key, index) => [key, index]));
+
+    // 将 counts 对象转换为数组，并根据 sortOrder 进行排序
+    return Object.fromEntries(
+      Object.entries(counts).sort(
+        ([keyA], [keyB]) =>
+          (sortOrderIndex.get(keyA) ?? sortOrder.length) -
+          (sortOrderIndex.get(keyB) ?? sortOrder.length)
+      )
+    );
+  }
+
+  // 如果没有提供排序规则，直接返回原始计数结果
+  return counts;
 }
 
-function initTypePieChart(
-  dom: HTMLElement | null | undefined,
-  dataList: any[]
+function getBasicPieChart(
+  title: string,
+  name: string,
+  countsList: Record<string, number>,
+  levelColors?: Record<string, string | LinearGradientObject>
 ) {
-  const pieChart = echarts.init(dom);
-  const typeCounts = calculateCounts(dataList, "type");
-
-  const option = {
+  return {
     title: {
-      text: "B35中DX和SD分布",
+      text: title,
       left: "center",
     },
     tooltip: {
@@ -35,60 +65,68 @@ function initTypePieChart(
     },
     series: [
       {
-        name: "类型",
+        name: name,
         type: "pie",
         radius: "50%",
-        data: [
-          { value: typeCounts.DX, name: "DX" },
-          { value: typeCounts.SD, name: "SD" },
-        ],
+        data: Object.keys(countsList).map((key) => {
+          // 创建数据对象
+          const dataObject: {
+            value: number;
+            name: string;
+            itemStyle?: { color: string | LinearGradientObject };
+          } = {
+            value: countsList[key],
+            name: key,
+          };
+
+          // 如果levelColors存在且为当前key提供了颜色，则添加itemStyle
+          if (levelColors && levelColors.hasOwnProperty(key)) {
+            dataObject.itemStyle = { color: levelColors[key] };
+          }
+
+          return dataObject;
+        }),
       },
     ],
   };
-  pieChart.setOption(option);
 }
 
-function initLevelPieChart(
-  dom: HTMLElement | null | undefined,
-  dataList: any[]
-) {
-  const chart = echarts.init(dom);
-  const levelCounts = calculateCounts(dataList, "level");
-
-  const option = {
-    title: {
-      text: "乐曲等级分布",
-      left: "center",
-    },
-    tooltip: {
-      trigger: "item",
-    },
-    legend: {
-      orient: "vertical",
-      left: "left",
-    },
-    series: [
-      {
-        name: "等级",
-        type: "pie",
-        radius: "50%",
-        data: Object.keys(levelCounts).map((key) => ({
-          value: levelCounts[key],
-          name: key,
-        })),
-      },
-    ],
-  };
-
-  chart.setOption(option);
+export function getTypeOption(dataList: SongData[]) {
+  return getBasicPieChart(
+    "B35中DX和SD分布",
+    "类型",
+    calculateCounts(dataList, ["type"])
+  );
 }
 
-function initLevelDistributionChart(
-  dom: HTMLElement | null | undefined,
-  dataList: any[]
-) {
-  const chart = echarts.init(dom);
-  const LevelDistributionCounts = calculateCounts(dataList, "level_label");
+function getLevelOption(dataList: SongData[]) {
+  return getBasicPieChart(
+    "乐曲等级分布",
+    "等级",
+    calculateCounts(dataList, ["level"])
+  );
+}
+
+function getLevelLabelOption(dataList: SongData[]) {
+  return getBasicPieChart(
+    "乐曲难度分布",
+    "难度",
+    calculateCounts(dataList, ["level_label"])
+  );
+}
+
+function getGenreOption(dataList: SongData[]) {
+  const levelCounts = calculateCounts(dataList, ["additionalData", "genre"]);
+  return getBasicPieChart("乐曲分类分布", "分类", levelCounts);
+}
+
+function getLevelVersionOption(dataList: SongData[]) {
+  const levelCounts = calculateCounts(dataList, ["additionalData", "version"]);
+  return getBasicPieChart("乐曲分类分布", "分类", levelCounts);
+}
+
+function getLevelDistributionOption(dataList: SongData[]) {
+  const LevelDistributionCounts = calculateCounts(dataList, ["level_label"]);
 
   // 颜色映射
   const levelColors = {
@@ -99,43 +137,16 @@ function initLevelDistributionChart(
     "Re:MASTER": "#dcbcfb", // 淡紫色
   };
 
-  const option = {
-    title: {
-      text: "乐曲难度分布",
-      left: "center",
-    },
-    tooltip: {
-      trigger: "item",
-    },
-    legend: {
-      orient: "vertical",
-      left: "left",
-    },
-    series: [
-      {
-        name: "难度",
-        type: "pie",
-        radius: "50%",
-        data: Object.keys(LevelDistributionCounts).map((key) => ({
-          value: LevelDistributionCounts[key],
-          name: key,
-          // 设置对应的颜色
-          itemStyle: {
-            color: levelColors[key as keyof typeof levelColors] || "#000", // 如果没有找到对应的颜色，使用默认颜色
-          },
-        })),
-      },
-    ],
-  };
-  chart.setOption(option);
+  return getBasicPieChart(
+    "乐曲难度分布",
+    "难度",
+    LevelDistributionCounts,
+    levelColors
+  );
 }
 
-function initRatePieChart(
-  dom: HTMLElement | null | undefined,
-  dataList: any[]
-) {
-  const chart = echarts.init(dom);
-  const rateCounts = calculateCounts(dataList, "rate");
+function getRateOption(dataList: SongData[]) {
+  const rateCounts = calculateCounts(dataList, ["rate"]);
   const rateColors = {
     sssp: new echarts.graphic.LinearGradient(1, 0, 0, 1, [
       { offset: 0, color: "#FF0000" }, // 番茄色（深红色）
@@ -153,169 +164,64 @@ function initRatePieChart(
     s: "#8B4513", // 土色
     // 默认颜色为淡灰色
   };
-  const option = {
-    title: {
-      text: "乐曲评级分布",
-      left: "center",
-    },
-    tooltip: {
-      trigger: "item",
-    },
-    legend: {
-      orient: "vertical",
-      left: "left",
-    },
-    series: [
-      {
-        name: "评级",
-        type: "pie",
-        radius: "50%",
-        data: Object.keys(rateCounts).map((key) => {
-          let color = rateColors[key as keyof typeof rateColors] || "#D3D3D3"; // 使用预定义的颜色，如果没有则使用淡灰色
-          return {
-            value: rateCounts[key],
-            name: key,
-            itemStyle: { color: color },
-          };
-        }),
-      },
-    ],
-  };
-  chart.setOption(option);
+
+  return getBasicPieChart("乐曲评级分布", "评级", rateCounts, rateColors);
 }
 
-function initBadgePieChart1(
-  dom: HTMLElement | null | undefined,
-  dataList: any[]
-) {
-  const chart = echarts.init(dom);
-  const levelCounts = calculateCounts(dataList, "fc");
+function getBadge1Option(dataList: SongData[]) {
+  const levelCounts = calculateCounts(dataList, ["fc"], {
+    app: "ALL PERFECT+",
+    ap: "ALL PERFECT",
+    fcp: "FULL COMBO+",
+    fc: "FULL COMBO",
+    null: "无徽章",
+  });
 
-  const option = {
-    title: {
-      text: "徽章",
-      left: "center",
-    },
-    tooltip: {
-      trigger: "item",
-    },
-    legend: {
-      orient: "vertical",
-      left: "left",
-    },
-    series: [
-      {
-        name: "徽章",
-        type: "pie",
-        radius: "50%",
-        data: [
-          {
-            name: "ALL PERFECT+",
-            value: levelCounts["app"] || 0,
-            itemStyle: { color: "gold" },
-          },
-          {
-            name: "ALL PERFECT",
-            value: levelCounts["ap"] || 0,
-            itemStyle: { color: "yellow" },
-          },
-          {
-            name: "FULL COMBO+",
-            value: levelCounts["fcp"] || 0,
-            itemStyle: { color: "#00ff00" },
-          },
-          {
-            name: "FULL COMBO",
-            value: levelCounts["fc"] || 0,
-            itemStyle: { color: "#00cc00" },
-          },
-          // 其他分类的汇总，过滤掉已经列出的分类
-          ...Object.keys(levelCounts)
-            .filter((key) => !["app", "ap", "fcp", "fc"].includes(key))
-            .map((key) => ({
-              name: key === "" ? "无徽章" : key,
-              value: levelCounts[key],
-              itemStyle: { color: "grey" },
-            })),
-        ].filter((item) => item.value !== 0), // 移除值为0的数据项
-      },
-    ],
+  const levelColors = {
+    "ALL PERFECT+": "gold",
+    "ALL PERFECT": "yellow",
+    "FULL COMBO+": "#00ff00",
+    "FULL COMBO": "#00cc00",
+    无徽章: "grey",
   };
 
-  chart.setOption(option);
+  return getBasicPieChart("徽章", "徽章", levelCounts, levelColors);
 }
 
-function initBadgePieChart2(
-  dom: HTMLElement | null | undefined,
-  dataList: any[]
-) {
-  const chart = echarts.init(dom);
-  const levelCounts = calculateCounts(dataList, "fs");
-
-  const option = {
-    title: {
-      text: "双人徽章",
-      left: "center",
-    },
-    tooltip: {
-      trigger: "item",
-    },
-    legend: {
-      orient: "vertical",
-      left: "left",
-    },
-    series: [
-      {
-        name: "徽章",
-        type: "pie",
-        radius: "50%",
-        data: [
-          {
-            name: "FULL SYNC DX+",
-            value: levelCounts["fsdp"] || 0,
-            itemStyle: { color: "gold" },
-          },
-          {
-            name: "FULL SYNC DX",
-            value: levelCounts["fsd"] || 0,
-            itemStyle: { color: "yellow" },
-          },
-          {
-            name: "FULL SYNC+",
-            value: levelCounts["fsp"] || 0,
-            itemStyle: { color: "#00ff00" },
-          },
-          {
-            name: "FULL SYNC",
-            value: levelCounts["fs"] || 0,
-            itemStyle: { color: "#00cc00" },
-          },
-          // 其他分类的汇总，过滤掉已经列出的分类
-          ...Object.keys(levelCounts)
-            .filter((key) => !["fsdp", "fsd", "fsp", "fs"].includes(key))
-            .map((key) => ({
-              name: key === "" ? "无徽章" : key,
-              value: levelCounts[key],
-              itemStyle: { color: "grey" },
-            })),
-        ].filter((item) => item.value !== 0), // 移除值为0的数据项
-      },
-    ],
+function getBadge2Option(dataList: SongData[]) {
+  const levelCounts = calculateCounts(dataList, ["fs"], {
+    fsdp: "FULL SYNC DX+",
+    fsd: "FULL SYNC DX",
+    fsp: "FULL SYNC+",
+    fs: "FULL SYNC",
+    null: "无徽章",
+  });
+  const levelColors = {
+    "FULL SYNC DX+": "gold",
+    "FULL SYNC DX": "yellow",
+    "FULL SYNC+": "#00ff00",
+    "FULL SYNC": "#00cc00",
+    无徽章: "grey",
   };
 
-  chart.setOption(option);
+  return getBasicPieChart("双人徽章", "徽章", levelCounts, levelColors);
 }
 
-export function initChart(
-  doms: HTMLElement[],
-  b15DataList: any[],
-  b35DataList: any[]
-) {
-  const totalDataList = b15DataList.concat(b35DataList);
-  initLevelPieChart(doms[0], totalDataList);
-  initLevelDistributionChart(doms[1], totalDataList);
-  initTypePieChart(doms[2], b35DataList);
-  initRatePieChart(doms[3], totalDataList);
-  initBadgePieChart1(doms[4], totalDataList);
-  initBadgePieChart2(doms[5], totalDataList);
-}
+export const functionList = (
+  b15: SongData[],
+  b35: SongData[]
+): EChartsOption[] => {
+  // 函数实现保持不变
+  const totalSongs = b15.concat(b35);
+  return [
+    getTypeOption(b35) as EChartsOption,
+    getLevelOption(totalSongs) as EChartsOption,
+    getLevelLabelOption(totalSongs) as EChartsOption,
+    getGenreOption(totalSongs) as EChartsOption,
+    getLevelVersionOption(b35) as EChartsOption,
+    getLevelDistributionOption(totalSongs) as EChartsOption,
+    getRateOption(totalSongs) as EChartsOption,
+    getBadge1Option(totalSongs) as EChartsOption,
+    getBadge2Option(totalSongs) as EChartsOption,
+  ];
+};

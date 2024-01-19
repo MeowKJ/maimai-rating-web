@@ -5,6 +5,7 @@ const scrollSpeed = 1;
 const scrollThreshold = 1000;
 const opacity = ref(0);
 const scrollY = ref(0);
+const scale = ref(0);
 function debounce<F extends (...args: any[]) => any>(
   func: F,
   delay: number
@@ -25,6 +26,7 @@ function debounce<F extends (...args: any[]) => any>(
 const handleScroll = debounce(() => {
   scrollY.value = window.scrollY;
   opacity.value = scrollY.value > scrollThreshold ? 1 : 0;
+  scale.value = scrollY.value > scrollThreshold ? 1 : 0;
 }, 200);
 
 const scrollToTop = () => {
@@ -45,7 +47,11 @@ onBeforeUnmount(() => {
 
 <template>
   <div
-    :style="{ opacity: opacity, transition: 'opacity 0.5s' }"
+    :style="{
+      opacity: opacity,
+      transform: `scale(${scale})`,
+      transition: 'opacity 0.5s, transform 0.5s',
+    }"
     class="to-top-container"
     @click="scrollToTop"
   >
@@ -69,8 +75,7 @@ onBeforeUnmount(() => {
   display: block;
   bottom: 2.5vw;
   right: 2.5vw;
-  transition: 1s;
-  cursor: pointer; /* Show hand cursor on hover */
+  cursor: pointer;
 }
 
 .dila {
@@ -93,10 +98,10 @@ onBeforeUnmount(() => {
   }
 }
 
-.to-top-container:hover {
+.to-top-container:hover .top {
   transform: translateY(-10px);
 }
 .to-top-container:hover .dila {
-  transform: rotate(360deg);
+  transform: translateY(-10px) rotate(360deg);
 }
 </style>

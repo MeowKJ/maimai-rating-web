@@ -1,5 +1,5 @@
 <template>
-  <el-card body-class="song-card" shadow="hover">
+  <el-card body-class="song-card" shadow="hover" @click="toggleAdditionDiv">
     <el-row>
       <!-- 歌曲图片 -->
       <el-col :span="24" :sm="8" :lg="7" :xl="6">
@@ -77,6 +77,65 @@
         </el-row>
       </el-col>
     </el-row>
+    <div class="addition-div" :class="{ expanded: isAdditionDivExpanded }">
+      <el-row style="padding: 5px; margin-top: 8px">
+        <el-col
+          :span="24"
+          style="
+            text-align: center;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+            border-bottom: 1px #000 dashed;
+          "
+        >
+          <span style="font-size: 1em; font-weight: bold"> 统计数据 </span>
+        </el-col>
+        <el-col :span="12" :xs="24">
+          <el-row>
+            <el-col :span="8">
+              <span class="addition-title">&nbsp;ALL</span>
+            </el-col>
+            <el-col style="text-align: center" :span="16">{{
+              song.additionalData.notes.total
+            }}</el-col>
+          </el-row>
+        </el-col>
+        <el-col :span="12" :xs="24" v-for="(data, index) in additonList">
+          <el-row>
+            <el-col :span="8">
+              <img class="addition-title" :src="data.icon" alt="tab" />
+            </el-col>
+            <el-col style="text-align: center" :span="16">{{
+              data.noteNumber
+            }}</el-col>
+          </el-row>
+        </el-col>
+        <el-col :span="12" :xs="24">
+          <el-row>
+            <el-col :span="8">
+              <span class="addition-title">&nbsp;铺面</span>
+            </el-col>
+            <el-col class="addition-text" :span="16"
+              ><p style="margin-top: 4px; text-align: center">
+                {{ song.additionalData.note_designer }}
+              </p></el-col
+            >
+          </el-row>
+        </el-col>
+        <el-col :span="12" :xs="24">
+          <el-row>
+            <el-col :span="8">
+              <span class="addition-title">版本</span>
+            </el-col>
+            <el-col class="addition-text" :span="16"
+              ><p style="margin-top: 4px; text-align: center">
+                {{ song.additionalData.version }}
+              </p></el-col
+            >
+          </el-row>
+        </el-col>
+      </el-row>
+    </div>
   </el-card>
 </template>
 
@@ -87,12 +146,48 @@ import {
   generateBadgeUrl,
   generateImageUrl,
   generateRateUrl,
-} from "../utils/url";
+} from "@/utils/url";
 
 const props = defineProps<{
   song: SongData;
   index: number;
 }>();
+const isAdditionDivExpanded = ref(false);
+
+const toggleAdditionDiv = () => {
+  isAdditionDivExpanded.value = !isAdditionDivExpanded.value;
+};
+
+const additonList = computed(() => {
+  return [
+    {
+      title: "tab",
+      icon: "https://i0.imgs.ovh/2024/01/19/spA42.png",
+      noteNumber: props.song?.additionalData.notes.tap ?? 0,
+    },
+    {
+      title: "hold",
+      icon: "https://i0.imgs.ovh/2024/01/19/splLj.png",
+      noteNumber: props.song?.additionalData.notes.hold ?? 0,
+    },
+    {
+      title: "touch",
+      icon: "https://i0.imgs.ovh/2024/01/19/spMaJ.png",
+      noteNumber: props.song?.additionalData.notes.touch ?? 0,
+    },
+    {
+      title: "slide",
+      icon: "https://i0.imgs.ovh/2024/01/19/spn0I.png",
+      noteNumber: props.song?.additionalData.notes.slide ?? 0,
+    },
+    {
+      title: "breadk",
+      icon: "https://i0.imgs.ovh/2024/01/19/spH1V.png",
+      noteNumber: props.song?.additionalData.notes.break ?? 0,
+    },
+  ];
+});
+
 const starNumberColors = ref(["#99A9BF", "#F7BA2A", "#f37800"]);
 const lowThreshold = ref(1);
 const highThreshold = ref(3);
@@ -116,6 +211,37 @@ const backgroundColorStyle = computed(() => {
 </script>
 
 <style scoped>
+.addition-div .addition-text {
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 0.5em;
+  font-weight: bold;
+}
+
+.addition-div {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+}
+
+.addition-div.expanded {
+  max-height: 180px; /* 设置为你希望的最大高度 */
+}
+
+.addition-div img {
+  height: 20px;
+}
+
+.addition-div .addition-title {
+  margin-left: 20%;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+.addition-div .el-col {
+  text-align: left;
+}
+
 .star-number {
   margin: 0;
   padding: 0;
@@ -189,6 +315,10 @@ const backgroundColorStyle = computed(() => {
 
   .star-number {
     transform: translateY(-5px);
+  }
+
+  .addition-div.expanded {
+    max-height: 300px;
   }
 }
 </style>

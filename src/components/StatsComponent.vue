@@ -13,28 +13,11 @@
       </el-card>
     </el-col>
   </el-row>
+
   <!-- 饼状图容器 -->
   <el-row :gutter="20" class="stats-row">
-    <el-col :span="24" :sm="12">
-      <div ref="typeChart" style="width: 100%; height: 400px"></div>
-    </el-col>
-    <el-col :span="24" :sm="12">
-      <div ref="levelChart" style="width: 100%; height: 400px"></div>
-    </el-col>
-    <el-col :span="24" :sm="12">
-      <div
-        ref="levelDistributionChart"
-        style="width: 100%; height: 400px"
-      ></div>
-    </el-col>
-    <el-col :span="24" :sm="12">
-      <div ref="rateChart" style="width: 100%; height: 400px"></div>
-    </el-col>
-    <el-col :span="24" :sm="12">
-      <div ref="badgeChart1" style="width: 100%; height: 400px"></div>
-    </el-col>
-    <el-col :span="24" :sm="12">
-      <div ref="badgeChart2" style="width: 100%; height: 400px"></div>
+    <el-col :span="24" :sm="12" v-for="(o, index) in optionList" :key="index">
+      <Chart :option="o" />
     </el-col>
   </el-row>
 </template>
@@ -43,9 +26,9 @@
 import { ref, onMounted, computed } from "vue";
 import { storeToRefs } from "pinia";
 
-import { initChart } from "../utils/charts";
 import { useUserStore } from "../store/user";
 import type { CombinedStatsData, SongData } from "../types";
+import Chart from "@/widgets/Chart.vue";
 const userStore = useUserStore();
 
 const { b15sum, b35sum } = storeToRefs(userStore);
@@ -55,12 +38,11 @@ const props = defineProps<{
   b35Data: SongData[];
 }>();
 
-const typeChart = ref<HTMLElement | null>(null);
-const levelChart = ref<HTMLElement | null>(null);
-const levelDistributionChart = ref<HTMLElement | null>(null);
-const rateChart = ref<HTMLElement | null>(null);
-const badgeChart1 = ref<HTMLElement | null>(null);
-const badgeChart2 = ref<HTMLElement | null>(null);
+import { functionList } from "../utils/charts";
+
+const optionList = computed(() => {
+  return functionList(props.b15Data, props.b35Data);
+});
 
 const userStats = computed(() => {
   const b15stats = calculateStats(props.b15Data, "b15");
@@ -78,22 +60,6 @@ onMounted(() => {
   }
   b15sum.value = userStats.value.b15sum;
   b35sum.value = userStats.value.b35sum;
-  // 确保所有的 DOM 元素都不为 null
-  const charts = [
-    typeChart.value,
-    levelChart.value,
-    levelDistributionChart.value,
-    rateChart.value,
-    badgeChart1.value,
-    badgeChart2.value,
-  ].filter((chart) => chart !== null) as HTMLElement[];
-
-  // 只有在所有的 ref 都不为 null 时调用 initChart
-  if (charts.length === 6) {
-    initChart(charts, props.b15Data, props.b35Data);
-  } else {
-    console.error("Some charts are not loaded");
-  }
 });
 function calculateStats(data: any[], prefix: string) {
   if (data.length === 0)
