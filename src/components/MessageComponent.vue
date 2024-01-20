@@ -41,7 +41,7 @@ const title = computed(() => {
 });
 
 const errorMessage = computed(() => {
-  if (tempUsername.value !== username.value) {
+  if (tempUsername.value !== username.value || username.value === "") {
     return "如果正常输入,使用[水鱼查分器].如果输入QQ号,使用[落雪查分器]";
   }
   const isLuoxue = isValidNumber(username.value);
