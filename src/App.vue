@@ -4,16 +4,18 @@
       <UserComponent />
     </el-header>
     <el-main class="main">
-      <div v-if="isLoading"><LoadingComponent /></div>
+      <LoadingComponent v-if="isLoading" />
       <div v-else-if="isSuccess">
         <SongComponet :total-songs="totalSongsComputed" />
         <StatsComponent :b15-data="b15Songs" :b35-data="b35Songs" />
       </div>
-      <div v-else>
-        <MessageComponent :icon="statusIcon" :error-message="errorMessage" />
-      </div>
+      <MessageComponent
+        v-else
+        :icon="statusIcon"
+        :error-message="errorMessage"
+      />
     </el-main>
-    <FooterComponent />
+    <FooterComponent :is-success="isSuccess" />
   </el-container>
   <BackgroundComponent />
   <ToTop />
@@ -32,13 +34,13 @@ import ToTop from "@/widgets/ToTop.vue";
 const route = useRoute();
 const userStore = useUserStore();
 
-const { isLoading, username, userData } = storeToRefs(userStore);
+const { isLoading, username, userData, fullscreenLoading } =
+  storeToRefs(userStore);
 
 const isSuccess = ref(false);
 const errorMessage = ref("请输入 <用户名> ");
 const statusIcon = ref("info");
 
-const fullscreenLoading = ref(false);
 const b15Songs: Ref<SongData[]> = ref([]);
 const b35Songs: Ref<SongData[]> = ref([]);
 
@@ -105,7 +107,6 @@ async function fetchData() {
 }
 
 import "element-plus/theme-chalk/display.css";
-import MessageComponent from "./components/MessageComponent.vue";
 </script>
 
 <style scoped>

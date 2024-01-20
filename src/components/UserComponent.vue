@@ -13,7 +13,7 @@ const computedAvatarUrl = computed(() => {
   if (userData.value && userData.value.avatarUrl) {
     return userData.value.avatarUrl;
   }
-  return "https://i0.imgs.ovh/2024/01/16/hkMKX.png";
+  return "https://maimai.mpas.top/assets/images/avatar";
 });
 
 const computedNickname = computed(() => {

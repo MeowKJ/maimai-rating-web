@@ -3,11 +3,11 @@
     <el-row>
       <!-- 歌曲图片 -->
       <el-col :span="24" :sm="8" :lg="7" :xl="6">
-        <img
+        <el-image
           :src="generateImageUrl(song.id)"
           alt="Card Image"
-          crossorigin="anonymous"
           class="song-image"
+          lazy
         />
       </el-col>
       <!-- 歌曲信息 -->
@@ -162,27 +162,27 @@ const additonList = computed(() => {
   return [
     {
       title: "tab",
-      icon: "https://i0.imgs.ovh/2024/01/19/spA42.png",
+      icon: "https://maimai.mpas.top/assets/images/tab",
       noteNumber: props.song?.additionalData.notes.tap ?? 0,
     },
     {
       title: "hold",
-      icon: "https://i0.imgs.ovh/2024/01/19/splLj.png",
+      icon: "https://maimai.mpas.top/assets/images/hold",
       noteNumber: props.song?.additionalData.notes.hold ?? 0,
     },
     {
       title: "touch",
-      icon: "https://i0.imgs.ovh/2024/01/19/spMaJ.png",
+      icon: "https://maimai.mpas.top/assets/images/touch",
       noteNumber: props.song?.additionalData.notes.touch ?? 0,
     },
     {
       title: "slide",
-      icon: "https://i0.imgs.ovh/2024/01/19/spn0I.png",
+      icon: "https://maimai.mpas.top/assets/images/slide",
       noteNumber: props.song?.additionalData.notes.slide ?? 0,
     },
     {
-      title: "breadk",
-      icon: "https://i0.imgs.ovh/2024/01/19/spH1V.png",
+      title: "break",
+      icon: "https://maimai.mpas.top/assets/images/break",
       noteNumber: props.song?.additionalData.notes.break ?? 0,
     },
   ];

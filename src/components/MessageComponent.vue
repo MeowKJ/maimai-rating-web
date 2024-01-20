@@ -25,8 +25,8 @@ let animInstance: AnimationItem | null;
 const searchImgUrl = computed(() => {
   return tempUsername.value
     ? isValidNumber(tempUsername.value)
-      ? "https://maimai.lxns.net/favicon.ico"
-      : "https://www.diving-fish.com/favicon.ico"
+      ? "https://maimai.mpas.top/assets/images/lxns"
+      : "https://maimai.mpas.top/assets/images/fish"
     : "";
 });
 
@@ -121,10 +121,14 @@ const playOnceAnimation = () => {
       <template #icon>
         <img
           v-if="props.icon === 'error'"
-          src="https://i0.imgs.ovh/2024/01/17/hjIW3.png"
+          src="https://maimai.mpas.top/assets/images/error"
           alt="error"
         />
-        <img v-else src="https://i0.imgs.ovh/2024/01/17/hjBPe.png" alt="info" />
+        <img
+          v-else
+          src="https://maimai.mpas.top/assets/images/normal"
+          alt="info"
+        />
       </template>
     </el-result>
   </div>

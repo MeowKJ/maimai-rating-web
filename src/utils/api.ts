@@ -38,7 +38,7 @@ export async function getDataFromDivingFish(
       username: username,
       nickname: rawUserData.nickname,
       rating: rawUserData.rating,
-      avatarUrl: "",
+      avatarUrl: "https://maimai.mpas.top/assets/images/avatar",
       plateId: 0,
       backgroundId: 0,
       rankId: 0,
@@ -235,14 +235,15 @@ function mapRawSongDataFish(rawSong: RawFishSong): SongData {
 }
 
 async function getTotalSongData() {
-  const apiUrl = "https://maimai.lxns.net/api/v0/maimai/song/list?notes=true";
-  const authHeaders = {
-    Authorization: import.meta.env.VITE_API_KEY,
-  };
+  //const apiUrl = "https://maimai.lxns.net/api/v0/maimai/song/list?notes=true";
+  const apiUrl = "https://cdn.mpas.top/json/songs.json";
+  // const authHeaders = {
+  //   Authorization: import.meta.env.VITE_API_KEY,
+  // };
   try {
     const response = await fetch(apiUrl, {
       method: "GET",
-      headers: authHeaders,
+      //  headers: authHeaders,
     });
 
     const responseData = await response.json();

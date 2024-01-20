@@ -50,7 +50,7 @@ import BalloonBear from "@/widgets/BalloonBear.vue";
         </div>
       </div>
     </div>
-    <BalloonBear src="https://i0.imgs.ovh/2024/01/19/skXCC.png" />
+    <BalloonBear src="https://maimai.mpas.top/assets/images/dila" />
   </div>
 </template>
 
