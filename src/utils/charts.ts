@@ -1,14 +1,17 @@
 import type { SongData } from "@/types";
-import * as echarts from "echarts";
-import type { LinearGradientObject } from "echarts";
-import type { EChartsOption } from "echarts";
+declare const echarts: typeof import("echarts");
+
+import type {
+  EChartsOption,
+  LinearGradientObject,
+  PieSeriesOption,
+} from "echarts";
 
 function calculateCounts<T>(
   data: T[],
   path: string[],
   nameMapping: Record<string, string> = {}
 ): Record<string, number> {
-  // 首先，和原来一样计算计数
   const counts = data.reduce((counts: Record<string, number>, item: T) => {
     let currentValue: any = item;
     for (const prop of path) {
@@ -23,25 +26,23 @@ function calculateCounts<T>(
     return counts;
   }, {});
 
-  // 使用 nameMapping 的 keys 创建排序顺序
-  const sortOrder = Object.values(nameMapping);
-
-  // 如果 nameMapping 提供了排序规则，则对结果进行排序
-  if (sortOrder.length > 0) {
-    // 创建一个映射，用于快速查找 sortOrder 中每个 key 的索引
-    const sortOrderIndex = new Map(sortOrder.map((key, index) => [key, index]));
-
-    // 将 counts 对象转换为数组，并根据 sortOrder 进行排序
-    return Object.fromEntries(
-      Object.entries(counts).sort(
-        ([keyA], [keyB]) =>
-          (sortOrderIndex.get(keyA) ?? sortOrder.length) -
-          (sortOrderIndex.get(keyB) ?? sortOrder.length)
-      )
-    );
+  // 如果提供了 nameMapping，则按照其键的顺序进行排序
+  if (Object.keys(nameMapping).length > 0) {
+    const sortedCounts: Record<string, number> = {};
+    for (const key of Object.keys(nameMapping)) {
+      if (counts[nameMapping[key]] !== undefined) {
+        sortedCounts[nameMapping[key]] = counts[nameMapping[key]];
+      }
+    }
+    // 包括那些在 nameMapping 中未定义的键
+    for (const key of Object.keys(counts)) {
+      if (sortedCounts[key] === undefined) {
+        sortedCounts[key] = counts[key];
+      }
+    }
+    return sortedCounts;
   }
 
-  // 如果没有提供排序规则，直接返回原始计数结果
   return counts;
 }
 
@@ -49,8 +50,35 @@ function getBasicPieChart(
   title: string,
   name: string,
   countsList: Record<string, number>,
-  levelColors?: Record<string, string | LinearGradientObject>
-) {
+  levelColors?: Record<string, string | LinearGradientObject>,
+  useRose = false
+): EChartsOption {
+  const seriesConfig: PieSeriesOption = {
+    name: name,
+    type: "pie",
+
+    data: Object.keys(countsList).map((key) => ({
+      value: countsList[key],
+      name: key,
+      itemStyle: levelColors?.[key] ? { color: levelColors[key] } : undefined,
+    })),
+    ...(useRose
+      ? {
+          radius: [50, 180],
+          center: ["50%", "50%"],
+          roseType: "area",
+          itemStyle: {
+            borderRadius: 8,
+          },
+        }
+      : {
+          radius: "50%",
+          itemStyle: {
+            borderRadius: 0,
+          },
+        }),
+  };
+
   return {
     title: {
       text: title,
@@ -63,35 +91,61 @@ function getBasicPieChart(
       orient: "vertical",
       left: "left",
     },
+    series: [seriesConfig],
+  };
+}
+function getBasicPointChart(
+  title: string,
+  countsList: [string, number, number][]
+): EChartsOption {
+  // 将 countsList 转换为 ECharts 数据格式
+  const formattedData = countsList.map((item) => ({
+    value: [item[1], item[2]], // 第二个和第三个元素为数据点
+    name: item[0], // 第一个元素为乐曲标题
+  }));
+
+  return {
+    xAxis: {
+      scale: true,
+    },
+    yAxis: {
+      scale: true,
+    },
+    title: {
+      text: title,
+      left: "center",
+    },
+    tooltip: {
+      // 显示标题和两个数字参数
+      formatter: function (params: any) {
+        return (
+          params.marker +
+          params.name +
+          "<br/>" +
+          params.value[0] +
+          "=>" +
+          params.value[1]
+        );
+      },
+    },
     series: [
       {
-        name: name,
-        type: "pie",
-        radius: "50%",
-        data: Object.keys(countsList).map((key) => {
-          // 创建数据对象
-          const dataObject: {
-            value: number;
-            name: string;
-            itemStyle?: { color: string | LinearGradientObject };
-          } = {
-            value: countsList[key],
-            name: key,
-          };
-
-          // 如果levelColors存在且为当前key提供了颜色，则添加itemStyle
-          if (levelColors && levelColors.hasOwnProperty(key)) {
-            dataObject.itemStyle = { color: levelColors[key] };
-          }
-
-          return dataObject;
-        }),
+        symbolSize: 20,
+        data: formattedData,
+        type: "scatter",
       },
     ],
   };
 }
 
-export function getTypeOption(dataList: SongData[]) {
+function getDsRateOption(dataList: SongData[]) {
+  return getBasicPointChart(
+    "定数-分数图",
+    dataList.map((item) => [item.title, item.ds, item.ra])
+  );
+}
+
+function getTypeOption(dataList: SongData[]) {
   return getBasicPieChart(
     "B35中DX和SD分布",
     "类型",
@@ -117,12 +171,24 @@ function getLevelLabelOption(dataList: SongData[]) {
 
 function getGenreOption(dataList: SongData[]) {
   const levelCounts = calculateCounts(dataList, ["additionalData", "genre"]);
-  return getBasicPieChart("乐曲分类分布", "分类", levelCounts);
+  return getBasicPieChart("乐曲分类分布", "分类", levelCounts, undefined, true);
 }
 
 function getLevelVersionOption(dataList: SongData[]) {
   const levelCounts = calculateCounts(dataList, ["additionalData", "version"]);
-  return getBasicPieChart("乐曲分类分布", "分类", levelCounts);
+  return getBasicPieChart("乐曲版本分布", "版本", levelCounts);
+}
+
+function getStarOption(dataList: SongData[]) {
+  const levelCounts = calculateCounts(dataList, ["starNumber"], {
+    0: "0⭐",
+    1: "1⭐",
+    2: "2⭐",
+    3: "3⭐",
+    4: "4⭐",
+    5: "5⭐",
+  });
+  return getBasicPieChart("DX星", "⭐", levelCounts);
 }
 
 function getLevelDistributionOption(dataList: SongData[]) {
@@ -206,22 +272,79 @@ function getBadge2Option(dataList: SongData[]) {
 
   return getBasicPieChart("双人徽章", "徽章", levelCounts, levelColors);
 }
+function getRaChangeLineChart(
+  b15Data: SongData[],
+  b35Data: SongData[]
+): EChartsOption {
+  // 反转 b15 和 b35 数据数组
+  const reversedB15Data = [...b15Data].reverse();
+  const reversedB35Data = [...b35Data].reverse();
+
+  return {
+    title: {
+      text: "乐曲分数变化曲线",
+      left: "center",
+    },
+    tooltip: {
+      trigger: "axis",
+    },
+    legend: {
+      data: ["B15", "B35"],
+      left: 10,
+    },
+    xAxis: [
+      {
+        type: "category",
+        data: reversedB15Data.map((_, index) => index + 1),
+        show: false,
+      },
+      {
+        type: "category",
+        data: reversedB35Data.map((_, index) => index + 1),
+        show: false,
+      },
+    ],
+    yAxis: {
+      type: "value",
+      name: "RA",
+      scale: true,
+    },
+    series: [
+      {
+        name: "B15",
+        type: "line",
+        xAxisIndex: 0,
+        data: reversedB15Data.map((song) => song.ra),
+        smooth: true,
+      },
+      {
+        name: "B35",
+        type: "line",
+        xAxisIndex: 1,
+        data: reversedB35Data.map((song) => song.ra),
+        smooth: true,
+      },
+    ],
+  };
+}
 
 export const functionList = (
   b15: SongData[],
   b35: SongData[]
 ): EChartsOption[] => {
-  // 函数实现保持不变
   const totalSongs = b15.concat(b35);
   return [
-    getTypeOption(b35) as EChartsOption,
-    getLevelOption(totalSongs) as EChartsOption,
-    getLevelLabelOption(totalSongs) as EChartsOption,
-    getGenreOption(totalSongs) as EChartsOption,
-    getLevelVersionOption(b35) as EChartsOption,
-    getLevelDistributionOption(totalSongs) as EChartsOption,
-    getRateOption(totalSongs) as EChartsOption,
-    getBadge1Option(totalSongs) as EChartsOption,
-    getBadge2Option(totalSongs) as EChartsOption,
+    getTypeOption(b35),
+    getLevelOption(totalSongs),
+    getLevelLabelOption(totalSongs),
+    getLevelDistributionOption(totalSongs),
+    getRateOption(totalSongs),
+    getStarOption(totalSongs),
+    getBadge1Option(totalSongs),
+    getBadge2Option(totalSongs),
+    getDsRateOption(totalSongs),
+    getRaChangeLineChart(b15, b35),
+    getLevelVersionOption(b35),
+    getGenreOption(totalSongs),
   ];
 };

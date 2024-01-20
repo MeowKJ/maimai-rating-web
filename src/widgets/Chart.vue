@@ -4,8 +4,9 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import * as echarts from "echarts";
 import type { EChartsOption } from "echarts";
+declare const echarts: typeof import("echarts");
+
 // Props 接收一个初始化图表的函数
 const props = defineProps<{
   option: EChartsOption;

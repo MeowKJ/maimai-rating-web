@@ -16,15 +16,21 @@
 
   <!-- 饼状图容器 -->
   <el-row :gutter="20" class="stats-row">
-    <el-col :span="24" :sm="12" v-for="(o, index) in optionList" :key="index">
+    <el-col
+      :span="24"
+      :sm="index > 9 ? 24 : 12"
+      v-for="(o, index) in optionList"
+      :key="index"
+    >
       <Chart :option="o" />
     </el-col>
   </el-row>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { onMounted, computed } from "vue";
 import { storeToRefs } from "pinia";
+import { functionList } from "@/utils/charts";
 
 import { useUserStore } from "../store/user";
 import type { CombinedStatsData, SongData } from "../types";
@@ -37,8 +43,6 @@ const props = defineProps<{
   b15Data: SongData[];
   b35Data: SongData[];
 }>();
-
-import { functionList } from "../utils/charts";
 
 const optionList = computed(() => {
   return functionList(props.b15Data, props.b35Data);

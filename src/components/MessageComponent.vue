@@ -1,13 +1,5 @@
 <script setup lang="ts">
-import {
-  ref,
-  onUnmounted,
-  computed,
-  defineProps,
-  onMounted,
-  watch,
-  type Ref,
-} from "vue";
+import { ref, onUnmounted, computed, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "@/store/user";
 import { isValidNumber } from "@/utils/tools";
