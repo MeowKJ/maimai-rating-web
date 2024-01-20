@@ -51,7 +51,7 @@ function getBasicPieChart(
   name: string,
   countsList: Record<string, number>,
   levelColors?: Record<string, string | LinearGradientObject>,
-  useRose = false
+  useRose?: boolean
 ): EChartsOption {
   const seriesConfig: PieSeriesOption = {
     name: name,
@@ -123,7 +123,7 @@ function getBasicPointChart(
           params.name +
           "<br/>" +
           params.value[0] +
-          "=>" +
+          "->" +
           params.value[1]
         );
       },

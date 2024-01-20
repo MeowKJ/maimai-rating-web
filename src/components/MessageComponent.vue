@@ -46,7 +46,7 @@ const searchImgUrl = computed(() => {
 function search() {
   router.push({ path: `/${tempUsername.value}` });
 }
-import lottie from "lottie-web";
+declare const lottie: import("lottie-web").LottiePlayer;
 import type { AnimationItem } from "lottie-web";
 
 const lottieContainer = ref<HTMLElement>();
