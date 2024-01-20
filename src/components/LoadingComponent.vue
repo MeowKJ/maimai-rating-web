@@ -4,7 +4,7 @@ import { ref, onMounted } from "vue";
 const tempArr = ref<number[]>([]);
 
 onMounted(() => {
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 35; i++) {
     tempArr.value.push(i);
   }
 });

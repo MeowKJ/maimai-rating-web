@@ -11,46 +11,44 @@ const userStore = useUserStore();
 const { username } = storeToRefs(userStore);
 const tempUsername = ref(username.value);
 
+import type { AnimationItem } from "lottie-web";
+
 const props = defineProps<{
   icon: string;
   errorMessage: string;
 }>();
 
-const isErrorIcon = computed(() => {
-  return props.icon === "error" ? true : false;
+const lottieContainer = ref<HTMLElement>();
+
+let animInstance: AnimationItem | null;
+
+const searchImgUrl = computed(() => {
+  return tempUsername.value
+    ? isValidNumber(tempUsername.value)
+      ? "https://maimai.lxns.net/favicon.ico"
+      : "https://www.diving-fish.com/favicon.ico"
+    : "";
 });
 
-const resultTitle = computed(() => {
-  return props.icon === "error" ? "遇到错误" : "注意~注意~";
+const title = computed(() => {
+  if (props.icon === "error" && tempUsername.value === username.value) {
+    return "❌遇到错误❌";
+  } else if (tempUsername.value) {
+    return `⭐${tempUsername.value}⭐`;
+  } else {
+    return "⭐请输入用户名⭐";
+  }
 });
 
 const errorMessage = computed(() => {
-  if (!username.value) {
-    return "请输入用户名";
+  if (tempUsername.value !== username.value) {
+    return "如果正常输入,使用[水鱼查分器].如果输入QQ号,使用[落雪查分器]";
   }
   const isLuoxue = isValidNumber(username.value);
   return `${props.errorMessage} ${isLuoxue ? "QQ号" : "用户名"}:<${
     username.value
   }>[${isLuoxue ? "落雪查分器" : "水鱼查分器"}]不存在哦~`;
 });
-
-const searchImgUrl = computed(() => {
-  if (!tempUsername.value) {
-    return "";
-  }
-  return isValidNumber(tempUsername.value)
-    ? "https://maimai.lxns.net/favicon.ico"
-    : "https://www.diving-fish.com/favicon.ico";
-});
-
-function search() {
-  router.push({ path: `/${tempUsername.value}` });
-}
-declare const lottie: import("lottie-web").LottiePlayer;
-import type { AnimationItem } from "lottie-web";
-
-const lottieContainer = ref<HTMLElement>();
-let animInstance: AnimationItem | null;
 
 onMounted(() => {
   if (lottieContainer.value) {
@@ -74,6 +72,10 @@ onUnmounted(() => {
     animInstance = null;
   }
 });
+
+function search() {
+  router.push({ path: `/${tempUsername.value}` });
+}
 
 const playLoopAnimation = () => {
   if (animInstance) {
@@ -115,13 +117,10 @@ const playOnceAnimation = () => {
       </el-row>
     </div>
 
-    <el-result :title="resultTitle" :sub-title="errorMessage" class="result">
-      <template #extra>
-        <el-button type="primary">Back</el-button>
-      </template>
+    <el-result :title="title" :sub-title="errorMessage" class="result">
       <template #icon>
         <img
-          v-if="isErrorIcon"
+          v-if="props.icon === 'error'"
           src="https://i0.imgs.ovh/2024/01/17/hjIW3.png"
           alt="error"
         />
@@ -204,7 +203,6 @@ const playOnceAnimation = () => {
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
   user-select: none;
-  cursor: default;
 }
 </style>
 
@@ -212,5 +210,9 @@ const playOnceAnimation = () => {
 .search-svg {
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
+}
+
+.el-result__title {
+  font-weight: bold;
 }
 </style>

@@ -64,8 +64,6 @@ button:focus-visible {
   margin: 0;
   padding: 0;
   text-align: center;
-  user-select: none;
-  cursor: default;
   z-index: 0;
 }
 

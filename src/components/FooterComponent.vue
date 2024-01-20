@@ -36,8 +36,6 @@ import iconTencentData from "@/asstes/animations/tencent-qq.json";
 const githubRef = ref<HTMLElement>();
 const tecentRef = ref<HTMLElement>();
 
-declare const lottie: import("lottie-web").LottiePlayer;
-
 onMounted(() => {
   if (githubRef.value) {
     lottie.loadAnimation({

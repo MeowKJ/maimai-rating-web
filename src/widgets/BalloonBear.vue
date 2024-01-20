@@ -3,8 +3,6 @@
 </template>
 
 <script setup lang="ts">
-import { gsap } from "gsap";
-
 import { onMounted, ref } from "vue";
 
 const props = defineProps({
@@ -13,6 +11,7 @@ const props = defineProps({
     required: true,
   },
 });
+
 const balloonRef = ref<HTMLElement | null>(null);
 
 const windowHeight = window.innerHeight;
