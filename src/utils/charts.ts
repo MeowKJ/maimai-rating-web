@@ -240,7 +240,7 @@ function getBadge1Option(dataList: SongData[]) {
     ap: "ALL PERFECT",
     fcp: "FULL COMBO+",
     fc: "FULL COMBO",
-    null: "无徽章",
+    "": "无徽章",
   });
 
   const levelColors = {
@@ -260,6 +260,7 @@ function getBadge2Option(dataList: SongData[]) {
     fsd: "FULL SYNC DX",
     fsp: "FULL SYNC+",
     fs: "FULL SYNC",
+    "": "无徽章",
     null: "无徽章",
   });
   const levelColors = {
@@ -268,6 +269,7 @@ function getBadge2Option(dataList: SongData[]) {
     "FULL SYNC+": "#00ff00",
     "FULL SYNC": "#00cc00",
     无徽章: "grey",
+    null: "无徽章",
   };
 
   return getBasicPieChart("双人徽章", "徽章", levelCounts, levelColors);
