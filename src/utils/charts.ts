@@ -241,6 +241,7 @@ function getBadge1Option(dataList: SongData[]) {
     fcp: "FULL COMBO+",
     fc: "FULL COMBO",
     "": "无徽章",
+    null: "无徽章",
   });
 
   const levelColors = {
