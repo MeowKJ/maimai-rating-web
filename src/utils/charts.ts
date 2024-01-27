@@ -167,7 +167,7 @@ function getLevelLabelOption(dataList: SongData[]) {
   // 颜色映射
   const levelColors = {
     Basic: "#90EE90", // 青草绿（淡绿色）
-    Advance: "#FFFFE0", // 黄色（淡黄色）
+    Advanced: "#FFBD33", // 黄色（淡黄色）
     Master: "#BA55D3", // 不那么淡的紫色
     Expert: "#FF6347", // 不那么红的红色（番茄色）
     "Re:MASTER": "#dcbcfb", // 淡紫色

@@ -197,7 +197,7 @@ const backgroundColorStyle = computed(() => {
     case 0:
       return "background-color: green;";
     case 1:
-      return "background-color: yellow;";
+      return "background-color: #FFBD33;";
     case 2:
       return "background-color: red;";
     case 3:
