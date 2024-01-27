@@ -99,13 +99,13 @@ export async function getUserDataFromLuoXue(
       nickname: rawUserData.name,
       rating: rawUserData.rating,
       avatarUrl: rawUserData.icon_url,
-      plateId: rawUserData.name_plate.id,
-      backgroundId: rawUserData.frame.id,
-      rankId: rawUserData.course_rank,
-      classId: rawUserData.class_rank,
-      starCount: rawUserData.star,
-      trophyName: rawUserData.trophy.name,
-      trophyColor: rawUserData.trophy.color,
+      plateId: rawUserData?.name_plate?.id || 0,
+      backgroundId: rawUserData?.frame?.id || 0,
+      rankId: rawUserData?.course_rank || 0,
+      classId: rawUserData?.class_rank || 0,
+      starCount: rawUserData.star || 0,
+      trophyName: rawUserData?.trophy.name || "",
+      trophyColor: rawUserData?.trophy.color || "",
       api: "LXNS",
     };
 
@@ -202,6 +202,7 @@ function mapRawSongDataLuoXue(rawSong: RawLuoXueSong): SongData {
 }
 
 function mapRawSongDataFish(rawSong: RawFishSong): SongData {
+  console.log(rawSong);
   return {
     achievements: rawSong.achievements,
     fc: rawSong.fc,
