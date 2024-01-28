@@ -1,7 +1,42 @@
-# Vue 3 + Vite
+# MaiMai 的网页查分器
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+简单实用的网页查分器，访问 b50.mpas.top 来使用吧
 
-## Recommended IDE Setup
+# 开发
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+克隆仓库
+
+```
+git clone https://github.com/MeowKJ/maimai-rating-web.git && cd maimai-rating-web
+```
+
+安装依赖
+
+```
+npm install
+```
+
+新建环境变量文件`.env`填入以下字段
+
+```
+VITE_API_KEY = 落雪咖啡屋查分器的开发者API
+```
+
+运行测试服务器
+
+```
+npm run dev
+```
+
+构建
+
+```
+npm run build
+```
+
+# 免费部署到 Vercel
+
+- fork 本仓库
+- 在 Vercel 选择此仓库部署(vite)
+- 添加环境变量 VITE_API_KEY 值为落雪咖啡屋查分器的开发者 API
+- 完成部署，可按需添加自己的域名
