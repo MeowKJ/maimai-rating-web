@@ -47,7 +47,7 @@ const errorMessage = computed(() => {
   const isLuoxue = isValidNumber(username.value);
   return `${props.errorMessage} ${isLuoxue ? "QQ号" : "用户名"}:<${
     username.value
-  }>[${isLuoxue ? "落雪查分器" : "水鱼查分器"}]不存在哦~`;
+  }>[${isLuoxue ? "落雪查分器" : "水鱼查分器"}]失败了~`;
 });
 
 onMounted(() => {
