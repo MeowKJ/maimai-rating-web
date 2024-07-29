@@ -148,6 +148,12 @@ import {
   generateRateUrl,
 } from "@/utils/url";
 
+import tabIcon from '@/images/tab.png';
+import holdIcon from '@/images/hold.png';
+import touchIcon from '@/images/touch.png';
+import slideIcon from '@/images/slide.png';
+import breakIcon from '@/images/break.png';
+
 const props = defineProps<{
   song: SongData;
   index: number;
@@ -158,31 +164,32 @@ const toggleAdditionDiv = () => {
   isAdditionDivExpanded.value = !isAdditionDivExpanded.value;
 };
 
+
 const additonList = computed(() => {
   return [
     {
       title: "tab",
-      icon: "https://maimai.mpas.top/assets/images/tab",
+      icon: tabIcon,
       noteNumber: props.song?.additionalData.notes.tap ?? 0,
     },
     {
       title: "hold",
-      icon: "https://maimai.mpas.top/assets/images/hold",
+      icon: holdIcon,
       noteNumber: props.song?.additionalData.notes.hold ?? 0,
     },
     {
       title: "touch",
-      icon: "https://maimai.mpas.top/assets/images/touch",
+      icon: touchIcon,
       noteNumber: props.song?.additionalData.notes.touch ?? 0,
     },
     {
       title: "slide",
-      icon: "https://maimai.mpas.top/assets/images/slide",
+      icon: slideIcon,
       noteNumber: props.song?.additionalData.notes.slide ?? 0,
     },
     {
       title: "break",
-      icon: "https://maimai.mpas.top/assets/images/break",
+      icon: breakIcon,
       noteNumber: props.song?.additionalData.notes.break ?? 0,
     },
   ];
