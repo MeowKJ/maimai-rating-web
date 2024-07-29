@@ -13,7 +13,7 @@ git clone https://github.com/MeowKJ/maimai-rating-web.git && cd maimai-rating-we
 安装依赖
 
 ```
-npm install
+pnpm install
 ```
 
 新建环境变量文件`.env`填入以下字段
@@ -25,13 +25,13 @@ VITE_API_KEY = 落雪咖啡屋查分器的开发者API
 运行测试服务器
 
 ```
-npm run dev
+pnpm run dev
 ```
 
 构建
 
 ```
-npm run build
+pnpm run build
 ```
 
 # 免费部署到 Vercel
