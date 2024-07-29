@@ -4,7 +4,7 @@ import { storeToRefs } from "pinia";
 import { useUserStore } from "@/store/user";
 import { isValidNumber } from "@/utils/tools";
 import { useRouter } from "vue-router";
-import animationData from "@/asstes/animations/search.json";
+import animationData from "@/assets/animations/search.json";
 
 const router = useRouter();
 const userStore = useUserStore();

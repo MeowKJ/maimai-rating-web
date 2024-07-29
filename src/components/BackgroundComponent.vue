@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import "@/asstes/styles/animation.css";
-import "@/asstes/styles/balloon.css";
-import "@/asstes/styles/position.css";
+import "@/assets/styles/animation.css";
+import "@/assets/styles/balloon.css";
+import "@/assets/styles/position.css";
 import BalloonBear from "@/widgets/BalloonBear.vue";
 </script>
 

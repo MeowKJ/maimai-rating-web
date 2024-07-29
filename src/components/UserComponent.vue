@@ -4,6 +4,7 @@ import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 
 import { useUserStore } from "../store/user";
+import { color } from "echarts";
 const router = useRouter();
 
 const userStore = useUserStore();
@@ -17,6 +18,7 @@ const computedAvatarUrl = computed(() => {
 });
 
 const computedNickname = computed(() => {
+  console.log("computedNickname: ", userData.value);
   if (userData.value) {
     return userData.value.nickname;
   }
@@ -89,13 +91,54 @@ const ratingImgUrl = computed(() => {
   return "https://maimai.mpas.top/assets/rating/01";
 });
 
-const trophyColor = computed(() => {
+
+
+// const trophyColor = computed(() => {
+//   if (userData.value) {
+//     return `https://maimai.mpas.top/assets/trophy/${userData.value.trophyColor}`;
+//   }
+//   return "https://maimai.mpas.top/assets/trophy/rainbow";
+// });
+
+const trophyBackgroundColor = computed(() => {
   if (userData.value) {
-    return `https://maimai.mpas.top/assets/trophy/${userData.value.trophyColor}`;
+    switch (userData.value.trophyColor.toLowerCase()) {
+      case "normal":
+        return "#292828"; // 灰色
+      case "bronze":
+        return "#cd7f32"; // 铜色
+      case "silver":
+        return "#000000"; // 银色
+      case "gold":
+        return "#ffd700"; // 金色
+      default:
+        return "#FF0000"; // 彩虹色
+    }
   }
-  return "https://maimai.mpas.top/assets/trophy/rainbow";
+  return "#808080"; // 彩虹色
 });
 
+const trophyDivStyle = computed(() => {
+  return {
+    backgroundColor: `${hexToRgba(trophyBackgroundColor.value, 0.8)}`,
+    color: "#fff",
+    borderRadius: "10px",
+  };
+});
+
+function hexToRgba(hex:string, alpha:number) {
+  let r = 0, g = 0, b = 0;
+  if (hex.length === 4) {
+    r = parseInt(hex[1] + hex[1], 16);
+    g = parseInt(hex[2] + hex[2], 16);
+    b = parseInt(hex[3] + hex[3], 16);
+  } else if (hex.length === 7) {
+    r = parseInt(hex[1] + hex[2], 16);
+    g = parseInt(hex[3] + hex[4], 16);
+    b = parseInt(hex[5] + hex[6], 16);
+  }
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 function search() {
   console.log("goTo use username: ", username.value);
   router.push({ path: `/${username.value}` });
@@ -113,9 +156,9 @@ function search() {
         :src="computedAvatarUrl"
       />
 
-      <div class="trophy">
-        <img :src="trophyColor" width="200px" alt="" />
-      </div>
+      <!-- <div :style="trophyDivStyle" class="trophy">
+        
+      </div> -->
 
       <div class="nickname">{{ computedNickname }}</div>
 
@@ -129,7 +172,7 @@ function search() {
       <div class="rating">
         <img width="150px" :src="ratingImgUrl" alt="" />
       </div>
-      <div class="trophy-text">{{ trophyText }}</div>
+      <div :style="trophyDivStyle" class="trophy-text">{{ trophyText }}</div>
       <div class="rating-text">{{ ratingText }}</div>
     </div>
   </div>
@@ -176,16 +219,15 @@ function search() {
 .trophy-text {
   text-align: center;
   overflow: hidden;
-  width: 190px;
+  width: 200px;
   margin-left: 5px;
   margin-right: 5px;
   font-size: 12px;
-  color: white;
   white-space: nowrap;
   text-shadow: #000 1px 0 0, #000 0 1px 0, #000 -1px 0 0, #000 0 -1px 0;
   position: absolute;
-  bottom: 9px;
-  left: 100px;
+  bottom: 6px;
+  left: 96px;
 }
 
 .rating-text {

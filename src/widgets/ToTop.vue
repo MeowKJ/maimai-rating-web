@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from "vue";
+import top1Png from '@/assets/images/top1.png';
+import top2Png from '@/assets/images/top2.png';
 
 const scrollSpeed = 1;
 const scrollThreshold = 1000;
 const opacity = ref(0);
 const scrollY = ref(0);
 const scale = ref(0);
+
 function debounce<F extends (...args: any[]) => any>(
   func: F,
   delay: number
@@ -57,12 +60,12 @@ onBeforeUnmount(() => {
   >
     <img
       class="to-top dila"
-      src="https://maimai.mpas.top/assets/images/top1"
+      :src="top1Png"
       alt="top"
     />
     <img
       class="to-top top"
-      src="https://maimai.mpas.top/assets/images/top2"
+      :src="top2Png"
       alt="top"
     />
   </div>

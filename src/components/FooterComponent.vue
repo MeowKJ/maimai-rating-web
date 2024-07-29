@@ -54,10 +54,10 @@ import { useUserStore } from "@/store/user";
 const userStore = useUserStore();
 const { userData, fullscreenLoading } = storeToRefs(userStore);
 
-import iconGithubData from "@/asstes/animations/github.json";
-import iconTencentData from "@/asstes/animations/tencent-qq.json";
-import iconQRCodeData from "@/asstes/animations/qrcode.json";
-import iconCameraData from "@/asstes/animations/camera.json";
+import iconGithubData from "@/assets/animations/github.json";
+import iconTencentData from "@/assets/animations/tencent-qq.json";
+import iconQRCodeData from "@/assets/animations/qrcode.json";
+import iconCameraData from "@/assets/animations/camera.json";
 
 const githubRef = ref<HTMLElement>();
 const tecentRef = ref<HTMLElement>();

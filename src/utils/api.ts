@@ -34,6 +34,8 @@ export async function getDataFromDivingFish(
     // 处理响应数据
     const rawUserData: RawFishResponse = await response.json();
 
+    console.log(rawUserData);
+
     const userData: UserData = {
       username: username,
       nickname: rawUserData.nickname,
@@ -92,13 +94,14 @@ export async function getUserDataFromLuoXue(
     if (!luoXueResponse.data) {
       return null;
     }
+
     const rawUserData = luoXueResponse.data as RawLuoXueUserData;
     // 在这里对数据进行格式修改
     const userData: UserData = {
       username: username,
       nickname: rawUserData.name,
       rating: rawUserData.rating,
-      avatarUrl: rawUserData.icon_url,
+      avatarUrl:`https://maimai.mpas.top/assets/avatar/${rawUserData.icon.id}`,
       plateId: rawUserData?.name_plate?.id || 0,
       backgroundId: rawUserData?.frame?.id || 0,
       rankId: rawUserData?.course_rank || 0,
@@ -202,7 +205,7 @@ function mapRawSongDataLuoXue(rawSong: RawLuoXueSong): SongData {
 }
 
 function mapRawSongDataFish(rawSong: RawFishSong): SongData {
-  console.log(rawSong);
+  //console.log(rawSong);
   return {
     achievements: rawSong.achievements,
     fc: rawSong.fc,

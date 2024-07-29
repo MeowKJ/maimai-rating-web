@@ -16,7 +16,11 @@ interface RawLuoXueUserData {
   course_rank: number;
   class_rank: number;
   star: number;
-  icon_url: string;
+  icon: {
+    genre: string;
+    id: number;
+    name: string;
+  };
   name_plate: {
     id: number;
     name: string;

@@ -85,7 +85,7 @@ async function fetchData() {
       isLoading.value = false;
       isSuccess.value = false;
       statusIcon.value = "error";
-      errorMessage.value = "无法获取你的分数";
+      errorMessage.value = "无法获取你的分数，请检查用户名是否正确，同时确保没有设置隐私保护";
       return;
     }
 

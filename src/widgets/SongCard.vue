@@ -148,11 +148,11 @@ import {
   generateRateUrl,
 } from "@/utils/url";
 
-import tabIcon from '@/images/tab.png';
-import holdIcon from '@/images/hold.png';
-import touchIcon from '@/images/touch.png';
-import slideIcon from '@/images/slide.png';
-import breakIcon from '@/images/break.png';
+import tabIcon from '@/assets/images/tap.png';
+import holdIcon from '@/assets/images/hold.png';
+import touchIcon from '@/assets/images/touch.png';
+import slideIcon from '@/assets/images/slide.png';
+import breakIcon from '@/assets/images/break.png';
 
 const props = defineProps<{
   song: SongData;
