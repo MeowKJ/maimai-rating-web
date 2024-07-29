@@ -236,11 +236,11 @@ function mapRawSongDataFish(rawSong: RawFishSong): SongData {
 }
 
 async function getTotalSongData() {
-  //const apiUrl = "https://maimai.lxns.net/api/v0/maimai/song/list?notes=true";
-  const apiUrl = "https://cdn.mpas.top/json/songs.json";
-  // const authHeaders = {
-  //   Authorization: import.meta.env.VITE_API_KEY,
-  // };
+  const apiUrl = "https://maimai.lxns.net/api/v0/maimai/song/list?notes=true";
+  //const apiUrl = "https://cdn.mpas.top/json/songs.json";
+  const authHeaders = {
+    Authorization: import.meta.env.VITE_API_KEY,
+  };
   try {
     const response = await fetch(apiUrl, {
       method: "GET",
@@ -345,6 +345,7 @@ function getVersionString(version: number) {
     { id: 15, title: "舞萌DX 2021", version: 21000 },
     { id: 17, title: "舞萌DX 2022", version: 22000 },
     { id: 19, title: "舞萌DX 2023", version: 23000 },
+    { id: 20, title: "舞萌DX 2024", version: 24000 },
   ];
 
   // 排序版本数组，确保版本按照升序排列
