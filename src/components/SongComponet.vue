@@ -2,7 +2,7 @@
 import { storeToRefs } from "pinia";
 import { useUserStore } from "../store/user";
 
-import type { SongData } from "../types";
+import type { SongData } from "../utils/api/types";
 
 import "element-plus/theme-chalk/display.css";
 import SongCard from "@/widgets/SongCard.vue";

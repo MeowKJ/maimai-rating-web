@@ -141,18 +141,18 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import type { SongData } from "../types";
+import type { SongData } from "../utils/api/types";
 import {
   generateBadgeUrl,
   generateImageUrl,
   generateRateUrl,
 } from "@/utils/url";
 
-import tabIcon from '@/assets/images/tap.png';
-import holdIcon from '@/assets/images/hold.png';
-import touchIcon from '@/assets/images/touch.png';
-import slideIcon from '@/assets/images/slide.png';
-import breakIcon from '@/assets/images/break.png';
+import tabIcon from "@/assets/images/tap.png";
+import holdIcon from "@/assets/images/hold.png";
+import touchIcon from "@/assets/images/touch.png";
+import slideIcon from "@/assets/images/slide.png";
+import breakIcon from "@/assets/images/break.png";
 
 const props = defineProps<{
   song: SongData;
@@ -163,7 +163,6 @@ const isAdditionDivExpanded = ref(false);
 const toggleAdditionDiv = () => {
   isAdditionDivExpanded.value = !isAdditionDivExpanded.value;
 };
-
 
 const additonList = computed(() => {
   return [

@@ -1,25 +1,39 @@
-export interface apiData {
+import {
+  FCType,
+  FSType,
+  LevelIndex,
+  RateType,
+  SongType,
+  ApiType,
+} from "./enum";
+
+export interface Beat50ApiData {
   userData: UserData;
-  songData: Songs;
+  best50SongData: Best50Songs;
+}
+
+export interface Best50Songs {
+  b15: SongData[];
+  b35: SongData[];
 }
 
 export interface SongData {
   achievements: number;
-  fc: null | string;
-  fs: null | string;
+  fc: FCType;
+  fs: FSType;
   level: string;
-  level_index: number;
+  level_index: LevelIndex;
   level_label: string;
   ds: number;
   ra: number;
-  rate: string;
+  rate: RateType;
   id: number;
   title: string;
-  type: "DX" | "SD";
+  type: SongType;
   dxScore: number;
   starNumber: number;
   additionalData: {
-    notes: songNotes;
+    notes: SongNotes;
     note_designer: string;
     version: string;
     bpm: number;
@@ -27,17 +41,13 @@ export interface SongData {
   };
 }
 
-interface songNotes {
+interface SongNotes {
   tap: number;
   hold: number;
   slide: number;
   break: number;
   touch: number;
   total: number;
-}
-export interface Songs {
-  b15: SongData[];
-  b35: SongData[];
 }
 
 export interface CombinedStatsData {
@@ -67,5 +77,37 @@ export interface UserData {
   starCount: number;
   trophyName: string;
   trophyColor: string;
-  api: "LXNS" | "FISH";
+  api: ApiType;
+}
+
+export interface SongInfo {
+  id: number;
+  title: string;
+  artist: string;
+  genre: string;
+  bpm: number;
+  version: number;
+  difficulties: {
+    standard: DifficultyInfo[];
+    dx: DifficultyInfo[];
+  };
+}
+
+export interface DifficultyInfo {
+  type: SongType;
+  difficulty: LevelIndex;
+  level: string;
+  level_value: number;
+  note_designer: string;
+  version: number;
+  notes: Notes;
+}
+
+export interface Notes {
+  tap: number;
+  hold: number;
+  slide: number;
+  break: number;
+  touch: number;
+  total: number;
 }

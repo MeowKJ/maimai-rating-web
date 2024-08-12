@@ -33,7 +33,7 @@ import { storeToRefs } from "pinia";
 import { functionList } from "@/utils/charts";
 
 import { useUserStore } from "../store/user";
-import type { CombinedStatsData, SongData } from "../types";
+import type { CombinedStatsData, SongData } from "../utils/api/types";
 import Chart from "@/widgets/Chart.vue";
 const userStore = useUserStore();
 

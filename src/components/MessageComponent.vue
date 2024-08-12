@@ -2,7 +2,7 @@
 import { ref, onUnmounted, computed, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "@/store/user";
-import { isValidNumber } from "@/utils/tools";
+import { isValidNumber } from "@/utils/api/DataProviderFactory";
 import { useRouter } from "vue-router";
 import animationData from "@/assets/animations/search.json";
 

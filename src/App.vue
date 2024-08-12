@@ -26,11 +26,11 @@ import { ref, watch, computed } from "vue";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "@/store/user";
-import { getDataFromDivingFish, getUserDataFromLuoXue } from "@/utils/api";
-import { isValidNumber } from "@/utils/tools";
 import type { Ref } from "vue";
-import type { SongData } from "@/types";
+import type { SongData } from "@/utils/api/types";
 import ToTop from "@/widgets/ToTop.vue";
+import { DataProviderFactory } from "@/utils/api/DataProviderFactory";
+
 const route = useRoute();
 const userStore = useUserStore();
 
@@ -74,26 +74,27 @@ async function fetchData() {
     b15Songs.value = [];
     b35Songs.value = [];
 
-    let data = null;
-    if (isValidNumber(username.value)) {
-      data = await getUserDataFromLuoXue(username.value);
-    } else {
-      data = await getDataFromDivingFish(username.value);
+    const provider = DataProviderFactory.createProvider(username.value);
+    if (!provider) {
+      throw new Error("无法创建数据提供者");
     }
+
+    const data = await provider.getBest50Data();
 
     if (data == null) {
       isLoading.value = false;
       isSuccess.value = false;
       statusIcon.value = "error";
-      errorMessage.value = "无法获取你的分数，请检查用户名是否正确，同时确保没有设置隐私保护";
+      errorMessage.value =
+        "无法获取你的分数，请检查用户名是否正确，同时确保没有设置隐私保护";
       return;
     }
 
     console.log("Get Data:", data);
 
     userData.value = data.userData;
-    b15Songs.value = data.songData.b15;
-    b35Songs.value = data.songData.b35;
+    b15Songs.value = data.best50SongData.b15;
+    b35Songs.value = data.best50SongData.b35;
     isSuccess.value = true;
   } catch (error) {
     isLoading.value = false;

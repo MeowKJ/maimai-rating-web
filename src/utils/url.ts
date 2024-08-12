@@ -10,6 +10,9 @@ export const generateBadgeUrl = (badge: string | null) => {
   if (!badge) {
     badge = "blank";
   }
+  if (badge === "none") {
+    badge = "blank";
+  }
   return `https://maimai.mpas.top/assets/badge/${badge}`;
 };
 

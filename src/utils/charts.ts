@@ -1,4 +1,4 @@
-import type { SongData } from "@/types";
+import type { SongData } from "@/utils/api/types";
 declare const echarts: typeof import("echarts");
 
 import type {

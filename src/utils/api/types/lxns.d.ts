@@ -1,7 +1,7 @@
-export interface LuoXueResponse {
+export interface RawLuoXueResponse {
   code: number;
   success: boolean;
-  data?: RawLuoXueUserData | RawLuoXueSongData;
+  data?: RawLuoXueUserData | RawLuoXueSongsData;
 }
 
 interface RawLuoXueUserData {
@@ -38,8 +38,8 @@ interface RawLuoXueSong {
   level: string;
   level_index: number;
   achievements: number;
-  fc: string | null;
-  fs: string | null;
+  fc: string;
+  fs: string;
   dx_score: number;
   dx_rating: number;
   rate: string;
@@ -53,34 +53,4 @@ interface RawLuoXueSongsData {
   dx_total: number;
   standard: RawLuoXueSong[];
   dx: RawLuoXueSong[];
-}
-
-export interface LuoXueSong {
-  id: number;
-  title: string;
-  artist: string;
-  genre: string;
-  bpm: number;
-  version: number;
-  difficulties: {
-    standard: LuoXueDifficulty[];
-    dx: LuoXueDifficulty[];
-  };
-}
-
-export interface LuoXueDifficulty {
-  type: string;
-  difficulty: number;
-  level: string;
-  level_value: number;
-  note_designer: string;
-  version: number;
-  notes: {
-    total: number;
-    tap: number;
-    hold: number;
-    slide: number;
-    touch: number;
-    break: number;
-  };
 }
