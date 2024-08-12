@@ -9,12 +9,17 @@ import {
 
 export interface Beat50ApiData {
   userData: UserData;
-  best50SongData: Best50Songs;
+  best50SongsData: Best50SongsData;
 }
 
-export interface Best50Songs {
+export interface Best50SongsData {
   b15: SongData[];
   b35: SongData[];
+}
+
+export interface CommonUserStatsData {
+  b15sum: number;
+  b35sum: number;
 }
 
 export interface SongData {

@@ -32,7 +32,7 @@ const searchImgUrl = computed(() => {
 
 const title = computed(() => {
   if (props.icon === "error" && tempUsername.value === username.value) {
-    return "❌遇到错误❌";
+    return "遇到错误❌";
   } else if (tempUsername.value) {
     return `⭐${tempUsername.value}⭐`;
   } else {
@@ -45,11 +45,10 @@ const errorMessage = computed(() => {
     return "如果正常输入,使用[水鱼查分器].如果输入QQ号,使用[落雪查分器]";
   }
   const isLuoxue = isValidNumber(username.value);
-  return `${props.errorMessage} ${isLuoxue ? "QQ号" : "用户名"}:<${
+  return `${props.errorMessage} --- ${isLuoxue ? "QQ号" : "用户名"}:<${
     username.value
   }>[${isLuoxue ? "落雪查分器" : "水鱼查分器"}]失败了~`;
 });
-
 onMounted(() => {
   if (lottieContainer.value) {
     animInstance = lottie.loadAnimation({

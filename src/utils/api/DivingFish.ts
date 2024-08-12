@@ -1,4 +1,9 @@
-import type { SongData, Best50Songs, UserData, Beat50ApiData } from "./types";
+import type {
+  SongData,
+  Best50SongsData,
+  UserData,
+  Beat50ApiData,
+} from "./types";
 import type { RawFishResponse, RawFishSong } from "@/utils/api/types/fish";
 import { getCachedTotalSongsInfo, enrichBest50Songs } from "./tools";
 import { ApiType } from "./types/enum";
@@ -55,7 +60,7 @@ export default class DivingFish extends ApiDataProvider {
       };
 
       // 从响应数据中映射歌曲数据
-      let songsData: Best50Songs = {
+      let songsData: Best50SongsData = {
         b15: rawUserData.charts.dx.map(mapRawSongDataFish),
         b35: rawUserData.charts.sd.map(mapRawSongDataFish),
       };
@@ -74,7 +79,7 @@ export default class DivingFish extends ApiDataProvider {
 
       return {
         userData,
-        best50SongData: songsData,
+        best50SongsData: songsData,
       };
     } catch (error) {
       console.error("发生错误:", error);

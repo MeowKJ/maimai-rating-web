@@ -209,9 +209,27 @@ function getLevelDistributionOption(dataList: SongData[]) {
 }
 
 function getRateOption(dataList: SongData[]) {
-  const rateCounts = calculateCounts(dataList, ["rate"]);
+  const rateCounts = calculateCounts(dataList, ["rate"], {
+    sssp: "SSS+",
+    sss: "SSS",
+    ssp: "SS+",
+    ss: "SS",
+    sp: "S+",
+    s: "S",
+    aaa: "AAA",
+    aa: "AA",
+    a: "A",
+    bbb: "BBB",
+    bb: "BB",
+    b: "B",
+    c: "C",
+    d: "D",
+    "": "无评级",
+    none: "无评级",
+    null: "无评级",
+  });
   const rateColors = {
-    sssp: new echarts.graphic.LinearGradient(1, 0, 0, 1, [
+    "SSS+": new echarts.graphic.LinearGradient(1, 0, 0, 1, [
       { offset: 0, color: "#FF0000" }, // 番茄色（深红色）
       { offset: 0.15, color: "#FF4500" }, // 橙红色
       { offset: 0.3, color: "#FFA500" }, // 橙色
@@ -220,11 +238,11 @@ function getRateOption(dataList: SongData[]) {
       { offset: 1, color: "#008000" }, // 绿色`
     ]),
 
-    sss: "#ff6699", // 浅红色
-    ssp: "#FFD700", // 金色
-    ss: "#FFFF00", // 黄色
-    sp: "#DAA520", // 土黄色
-    s: "#8B4513", // 土色
+    SSS: "#ff6699", // 浅红色
+    "SS+": "#FFD700", // 金色
+    SS: "#FFFF00", // 黄色
+    "S+": "#DAA520", // 土黄色
+    S: "#8B4513", // 土色
     // 默认颜色为淡灰色
   };
 
@@ -238,6 +256,7 @@ function getBadge1Option(dataList: SongData[]) {
     fcp: "FULL COMBO+",
     fc: "FULL COMBO",
     "": "无徽章",
+    none: "无徽章",
     null: "无徽章",
   });
 
@@ -259,6 +278,8 @@ function getBadge2Option(dataList: SongData[]) {
     fsp: "FULL SYNC+",
     fs: "FULL SYNC",
     "": "无徽章",
+    sync: "SYNC PLAY",
+    none: "无徽章",
     null: "无徽章",
   });
   const levelColors = {

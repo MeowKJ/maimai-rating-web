@@ -9,7 +9,7 @@ import SongCard from "@/widgets/SongCard.vue";
 
 const userStore = useUserStore();
 
-const { b15sum, b35sum } = storeToRefs(userStore);
+const { commonUserStatsData } = storeToRefs(userStore);
 
 const emit = defineEmits(["catchError"]);
 
@@ -29,7 +29,7 @@ const props = defineProps<{
       <el-col :span="24">
         <div class="category-title">
           <span class="bx-title">{{ i === 0 ? "B15   " : "B35   " }}</span>
-          <span class="bx-score">{{ i === 0 ? b15sum : b35sum }}</span>
+          <span class="bx-score">{{ i === 0 ? commonUserStatsData.b15sum : commonUserStatsData.b35sum }}</span>
         </div>
       </el-col>
     </el-row>

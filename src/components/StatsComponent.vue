@@ -29,15 +29,16 @@
 
 <script setup lang="ts">
 import { onMounted, computed } from "vue";
-import { storeToRefs } from "pinia";
 import { functionList } from "@/utils/charts";
 
-import { useUserStore } from "../store/user";
 import type { CombinedStatsData, SongData } from "../utils/api/types";
 import Chart from "@/widgets/Chart.vue";
+
+import { storeToRefs } from "pinia";
+import { useUserStore } from "../store/user";
 const userStore = useUserStore();
 
-const { b15sum, b35sum } = storeToRefs(userStore);
+const { commonUserStatsData } = storeToRefs(userStore);
 
 const props = defineProps<{
   b15Data: SongData[];
@@ -62,9 +63,10 @@ onMounted(() => {
     console.error("songData is not loaded");
     return;
   }
-  b15sum.value = userStats.value.b15sum;
-  b35sum.value = userStats.value.b35sum;
+  commonUserStatsData.value.b15sum = userStats.value.b15sum;
+  commonUserStatsData.value.b35sum = userStats.value.b35sum;
 });
+
 function calculateStats(data: any[], prefix: string) {
   if (data.length === 0)
     return { max: 0, min: 0, avg: 0, sum: 0, range: 0, stdDev: 0 };

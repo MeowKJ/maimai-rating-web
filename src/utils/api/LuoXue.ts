@@ -1,5 +1,10 @@
 // luoXue.ts
-import type { SongData, Best50Songs, UserData, Beat50ApiData } from "./types";
+import type {
+  SongData,
+  Best50SongsData,
+  UserData,
+  Beat50ApiData,
+} from "./types";
 import {
   ApiType,
   FCType,
@@ -96,7 +101,7 @@ export default class LuoXue extends ApiDataProvider {
         return null;
       }
 
-      let songsData: Best50Songs = {
+      let songsData: Best50SongsData = {
         b15: songDataRaw.dx.map((item) => this.mapRawSongDataLuoXue(item)),
         b35: songDataRaw.standard.map((item) =>
           this.mapRawSongDataLuoXue(item)
@@ -112,7 +117,7 @@ export default class LuoXue extends ApiDataProvider {
 
       return {
         userData,
-        best50SongData: songsData,
+        best50SongsData: songsData,
       };
     } catch (error) {
       console.error("Error At Get Best50Data From LXNS:", error);
