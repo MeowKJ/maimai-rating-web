@@ -11,7 +11,7 @@ export async function captureScreenshot(func: () => Promise<void>) {
 
     // 使用 html2canvas 创建截图
     html2canvas(element, {
-      useCORS: true, // 解决外部图片的跨域问题
+      useCORS: false, // 解决外部图片的跨域问题
       backgroundColor: null, // 保留透明背景
       scale: 2, // 更高质量的输出
     })
