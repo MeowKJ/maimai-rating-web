@@ -23,6 +23,7 @@
     "@tsconfig/node18": "^18.2.2",
     "@types/echarts": "^4.9.22",
     "@types/gsap": "^3.0.0",
+    "@types/lodash": "^4.17.15",
     "@types/node": "^18.19.8",
     "@vitejs/plugin-vue": "^4.5.2",
     "@vue/tsconfig": "^0.5.0",

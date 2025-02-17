@@ -1,4 +1,4 @@
-import type { SongData, SongInfo, Best50Songs } from "./types";
+import type { SongData, SongInfo, Best50SongsData } from "./types";
 import { SongType } from "./types/enum";
 
 /**
@@ -118,10 +118,10 @@ function enrichSongData(
  * @returns 返回添加了附加信息的 Best50Songs 数据
  */
 async function enrichBest50Songs(
-  best50Songs: Best50Songs,
+  best50Songs: Best50SongsData,
   totalSongsInfoMap: Record<number, SongInfo>
-): Promise<Best50Songs> {
-  const result: Best50Songs = {
+): Promise<Best50SongsData> {
+  const result: Best50SongsData = {
     b15: best50Songs.b15
       .map((song) => enrichSongData(song, totalSongsInfoMap))
       .filter((s) => s !== null) as SongData[],
