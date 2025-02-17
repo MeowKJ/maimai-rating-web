@@ -71,7 +71,7 @@ const getImgCodeFromDxRating = (dxRating: number): string => {
     [12000, 12999, "07"],
     [13000, 13999, "08"],
     [14000, 14499, "09"],
-    [14500, 14999, "09"],
+    [14500, 14999, "10"],
   ];
 
   for (const [lower, upper, code] of ranges) {
@@ -79,7 +79,7 @@ const getImgCodeFromDxRating = (dxRating: number): string => {
       return code;
     }
   }
-  return "10";
+  return "11";
 };
 
 const ratingImgUrl = computed(() => {
