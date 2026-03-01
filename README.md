@@ -1,5 +1,13 @@
 # MaiMai 的网页查分器
 
+> [!IMPORTANT]
+> 本仓库已归档，不再继续更新。
+>  
+> 新项目已迁移至：[`MeowKJ/maimai-lab`](https://github.com/MeowKJ/maimai-lab.git)
+>  
+> `maimai-lab` 将 maimai 频道机器人、maimai 小工具、maimai 网页查分器、maimai 图片缓存整合为一个仓库，便于统一维护与 CI/CD。
+>  
+
 简单实用的网页查分器，访问 [b50.mpas.top](https://b50.mpas.top) 来使用吧
 
 面向PC，以及Pad等大屏用户使用的b50速生成
