@@ -6,7 +6,8 @@
 > 新项目已迁移至：[`MeowKJ/maimai-lab`](https://github.com/MeowKJ/maimai-lab.git)
 >  
 > `maimai-lab` 将 maimai 频道机器人、maimai 小工具、maimai 网页查分器、maimai 图片缓存整合为一个仓库，便于统一维护与 CI/CD。
->  
+>  由于UI统一，可能功能性暂时还没这个好用，很多fes风格小动画也没有
+>
 
 简单实用的网页查分器，访问 [b50.mpas.top](https://b50.mpas.top) 来使用吧
 
@@ -24,6 +25,7 @@
 ![](https://pic.imgdb.cn/item/66a7b1f5d9c307b7e94c3228.png)
 ![](https://pic.imgdb.cn/item/66a7b245d9c307b7e94c7e43.png)
 ![](https://pic.imgdb.cn/item/66a7b258d9c307b7e94c93af.png)
+<img width="2762" height="1353" alt="image" src="https://github.com/user-attachments/assets/6fb5e0db-f78c-4049-bdd3-eb001f55026b" />
 
 # 开发
 
